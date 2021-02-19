@@ -28,7 +28,7 @@ export default {
     getCourses() {
       let token = localStorage.getItem("token");
       axios
-        .get("http://college.api:8000/api/courses", {
+        .get("https://craig-college-api.herokuapp.com/api/courses", {
           headers: { Authorization: "Bearer " + token },
         })
         .then((response) => {
@@ -43,7 +43,7 @@ export default {
     logout() {
       let token = localStorage.getItem("token");
       axios
-        .get("http://college.api:8000/api/logout", {
+        .get("https://craig-college-api.herokuapp.com/api/logout", {
           headers: { Authorization: "Bearer " + token },
         })
         .then((response) => {

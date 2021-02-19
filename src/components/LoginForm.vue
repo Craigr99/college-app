@@ -52,7 +52,7 @@ export default {
   methods: {
     login() {
       axios
-        .post("http://college.api:8000/api/login", {
+        .post("https://craig-college-api.herokuapp.com/api/login", {
           email: this.form.email,
           password: this.form.password,
         })
