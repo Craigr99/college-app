@@ -1,13 +1,18 @@
 <template>
   <div>
     <b-card>
-      <b-form @submit.prevent="login()" @reset="onReset()" v-if="show">
-        <b-form-group
-          id="input-group-1"
-          label="Email address:"
-          label-for="input-1"
-          description="We'll never share your email with anyone else."
-        >
+      <b-form @submit.prevent="register()" @reset="onReset()" v-if="show">
+        <b-form-group id="name" label="Name:" label-for="name">
+          <b-form-input
+            id="name"
+            v-model="form.name"
+            type="text"
+            placeholder="Enter name"
+            required
+          ></b-form-input>
+        </b-form-group>
+
+        <b-form-group id="email" label="Email address:" label-for="email">
           <b-form-input
             id="email"
             v-model="form.email"
@@ -27,7 +32,7 @@
           ></b-form-input>
         </b-form-group>
 
-        <b-button type="submit" variant="primary">Submit</b-button>
+        <b-button type="submit" variant="primary">Register</b-button>
         <b-button type="reset" variant="danger">Reset</b-button>
       </b-form>
     </b-card>
@@ -42,6 +47,7 @@ export default {
   data() {
     return {
       form: {
+        name: "",
         email: "",
         password: "",
         checked: [],
@@ -50,9 +56,10 @@ export default {
     };
   },
   methods: {
-    login() {
+    register() {
       axios
-        .post("https://craig-college-api.herokuapp.com/api/login", {
+        .post("https://craig-college-api.herokuapp.com/api/register", {
+          name: this.form.name,
           email: this.form.email,
           password: this.form.password,
         })
