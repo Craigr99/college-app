@@ -59,7 +59,7 @@ export default {
         .then((response) => {
           console.log(response.data);
           localStorage.setItem("token", response.data.token);
-          this.$router.replace({ name: "courses_index" });
+          this.$router.replace({ name: "user_dashboard" });
           this.$emit("has-token", true);
         })
         .catch((error) => {

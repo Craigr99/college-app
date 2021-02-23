@@ -1,11 +1,6 @@
 <template>
   <div>
-    <h1>this is the courses index page</h1>
-    <br />
-
-    <div v-for="course in courses" :key="course.id">
-      <p>{{ course.title }}</p>
-    </div>
+    <h1>Welcome home {{ user.name }}</h1>
   </div>
 </template>
 
@@ -13,26 +8,25 @@
 import axios from "axios";
 
 export default {
-  name: "CourseIndex",
-  components: {},
+  name: "UserDashboard",
   data() {
     return {
-      courses: [],
+      user: [],
     };
   },
   mounted() {
-    this.getCourses();
+    this.getUser();
   },
   methods: {
-    getCourses() {
+    getUser() {
       let token = localStorage.getItem("token");
       axios
-        .get("https://craig-college-api.herokuapp.com/api/courses", {
+        .get("https://craig-college-api.herokuapp.com/api/user", {
           headers: { Authorization: "Bearer " + token },
         })
         .then((response) => {
-          console.log(response.data.data);
-          this.courses = response.data.data;
+          console.log(response.data.user);
+          this.user = response.data.user;
         })
         .catch((error) => {
           console.log(error);
@@ -43,4 +37,5 @@ export default {
 };
 </script>
 
-<style></style>
+<style>
+</style>

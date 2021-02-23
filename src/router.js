@@ -2,14 +2,18 @@ import Vue from "vue";
 import Router from "vue-router";
 
 import Home from "./views/Home";
+import UserDashboard from "./views/user/Dashboard";
 import Login from "./views/Login";
 import Register from "./views/Register";
 import CoursesIndex from "./views/courses/Index";
 // import CoursesShow from "./views/courses/Show";
 // import CoursesEdit from "./views/courses/Edit";
+import EnrolmentsIndex from "./views/enrolments/Index";
+import LecturersIndex from "./views/lecturers/Index";
 
 Vue.use(Router);
 
+// Function to authenticate routes
 function guardRoute(to, from, next)
 {
  var isAuthenticated= false;
@@ -24,7 +28,7 @@ if(isAuthenticated) {
  }
 }
 
-const router = new Router({
+export default new Router({
   mode: "history",
   base: process.env.BASE_URL,
   routes: [
@@ -32,6 +36,12 @@ const router = new Router({
       path: "/",
       name: "home",
       component: Home,
+    },
+    {
+      path: "/dashboard",
+      name: "user_dashboard",
+      component: UserDashboard,
+      beforeEnter: guardRoute,
     },
     {
       path: "/login",
@@ -62,9 +72,6 @@ const router = new Router({
       name: "courses_index",
       component: CoursesIndex,
       beforeEnter: guardRoute,
-      meta: {
-        requiresAuth: true,
-      },
     },
     // {
     //   path: "/courses/show",
@@ -76,8 +83,19 @@ const router = new Router({
     //   name: "courses_edit",
     //   component: CoursesEdit
     // },
+    {
+      path: "/enrolments",
+      name: "enrolments_index",
+      component: EnrolmentsIndex,
+      beforeEnter: guardRoute
+    },
+    {
+      path: "/lecturers",
+      name: "lecturers_index",
+      component: LecturersIndex,
+      beforeEnter: guardRoute
+    },
   ]
 });
 
-export default router;
 
