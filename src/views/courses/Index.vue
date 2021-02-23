@@ -4,7 +4,11 @@
     <br />
 
     <div v-for="course in courses" :key="course.id">
-      <p>{{ course.title }}</p>
+      <router-link
+        :to="{ name: 'courses_show', params: { courseId: course.id } }"
+      >
+        <p>{{ course.title }}</p>
+      </router-link>
     </div>
   </div>
 </template>
