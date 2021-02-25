@@ -1,8 +1,11 @@
 <template>
   <div id="app">
-    <Navbar />
+    <Navbar @logging-out="loggingOut()" :loggedIn="loggedIn" />
     <b-container class="mt-5">
-      <router-view />
+      <router-view
+        @logging-in="loggingIn()"
+        @registering-user="registering()"
+      />
     </b-container>
   </div>
 </template>
@@ -14,6 +17,31 @@ export default {
   name: "App",
   components: {
     Navbar,
+  },
+  mounted() {
+    this.checkIfLogged();
+  },
+  data() {
+    return {
+      loggedIn: false,
+    };
+  },
+  methods: {
+    checkIfLogged() {
+      let token = localStorage.getItem("token");
+      if (token) {
+        this.loggedIn = true;
+      }
+    },
+    loggingIn() {
+      this.loggedIn = true;
+    },
+    loggingOut() {
+      this.loggedIn = false;
+    },
+    registering() {
+      this.loggedIn = true;
+    },
   },
 };
 </script>
