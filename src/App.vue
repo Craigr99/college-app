@@ -1,10 +1,17 @@
 <template>
   <div id="app">
-    <Navbar @logging-out="loggingOut()" :loggedIn="loggedIn" />
+    <Navbar
+      :token="token"
+      v-on:login="setLoggedIn"
+      v-on:logout="setLoggedOut"
+      :loggedIn="this.loggedIn"
+    />
     <b-container class="mt-5">
       <router-view
-        @logging-in="loggingIn()"
-        @registering-user="registering()"
+        :loggedIn="this.loggedIn"
+        v-on:login="setLoggedIn"
+        v-on:logout="setLoggedOut"
+        v-on:register="setLoggedIn"
       />
     </b-container>
   </div>
@@ -24,6 +31,7 @@ export default {
   data() {
     return {
       loggedIn: false,
+      token: "",
     };
   },
   methods: {
@@ -33,10 +41,11 @@ export default {
         this.loggedIn = true;
       }
     },
-    loggingIn() {
+    setLoggedIn() {
       this.loggedIn = true;
+      this.token = localStorage.getItem("token");
     },
-    loggingOut() {
+    setLoggedOut() {
       this.loggedIn = false;
     },
     registering() {

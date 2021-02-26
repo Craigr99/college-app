@@ -1,6 +1,6 @@
 <template>
   <div class="register">
-    <RegisterForm @registering-user="registeringUser()" />
+    <RegisterForm @register="registeringUser()" />
   </div>
 </template>
 
@@ -12,7 +12,7 @@ export default {
   components: { RegisterForm },
   methods: {
     registeringUser() {
-      this.$emit("registering-user", true);
+      this.$emit("register");
     },
   },
 };

@@ -1,6 +1,6 @@
 <template>
   <div class="login">
-    <LoginForm @logging-in="loggingIn()" />
+    <LoginForm @login="loggingIn()" />
   </div>
 </template>
 
@@ -12,7 +12,7 @@ export default {
   components: { LoginForm },
   methods: {
     loggingIn() {
-      this.$emit("logging-in", true);
+      this.$emit("login");
     },
   },
 };

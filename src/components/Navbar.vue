@@ -61,7 +61,9 @@
 import axios from "axios";
 
 export default {
-  props: ["loggedIn"],
+  props: {
+    loggedIn: Boolean,
+  },
   data() {
     return {};
   },
@@ -75,8 +77,8 @@ export default {
         .then((response) => {
           console.log(response.data);
           console.log("Logged out");
-          this.$emit("logging-out", true);
-          this.$router.replace({ name: "login" });
+          this.$emit("logout");
+          this.$router.push({ name: "login" });
         })
         .catch((error) => {
           console.log(error);

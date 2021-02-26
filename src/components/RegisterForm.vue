@@ -68,7 +68,7 @@ export default {
           localStorage.setItem("token", response.data.token);
           this.$router.replace({ name: "user_dashboard" });
           this.$emit("has-token", true);
-          this.$emit("registering-user", true);
+          this.$emit("register");
         })
         .catch((error) => {
           console.log(error);
