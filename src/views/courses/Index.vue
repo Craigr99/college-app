@@ -7,7 +7,14 @@
       </b-button>
     </div>
 
-    <b-table striped hover :items="courses" :fields="fields">
+    <b-table
+      responsive
+      striped
+      hover
+      :items="courses"
+      :fields="fields"
+      head-variant="dark"
+    >
       <template #cell(title)="data">
         <router-link
           :to="{ name: 'courses_show', params: { id: data.item.id } }"
@@ -33,8 +40,14 @@ export default {
           key: "title",
           sortable: true,
         },
-        "code",
-        "points",
+        {
+          key: "code",
+          sortable: true,
+        },
+        {
+          key: "points",
+          sortable: true,
+        },
         {
           key: "level",
           sortable: true,

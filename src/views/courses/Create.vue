@@ -1,7 +1,8 @@
 <template>
   <div>
     <b-card>
-      <b-form @submit.prevent="createCourse()" @reset="onReset()">
+      <b-form @submit.prevent="createCourse()" @reset="onReset()" novalidate>
+        <!-- Title -->
         <b-form-group id="title" label="Course title:" label-for="title">
           <b-form-input
             id="title"
@@ -9,8 +10,28 @@
             type="text"
             placeholder="Enter title"
             required
+            :class="{
+              'is-invalid': submitted && $v.form.title.$error,
+            }"
           ></b-form-input>
+          <!-- Error message for title -->
+          <span
+            v-if="submitted && !$v.form.title.required"
+            class="invalid-feedback"
+          >
+            Title is required
+          </span>
+
+          <span
+            v-if="submitted && !$v.form.title.maxLength"
+            class="invalid-feedback"
+          >
+            Title cannot be more than
+            {{ $v.form.title.$params.maxLength.max }} characters.
+          </span>
         </b-form-group>
+
+        <!-- Code -->
         <b-form-group id="code" label="Course code:" label-for="code">
           <b-form-input
             id="code"
@@ -18,11 +39,25 @@
             type="text"
             placeholder="Enter code"
             required
+            :class="{ 'is-invalid': submitted && $v.form.code.$error }"
           ></b-form-input>
+          <!-- Error message for code -->
+          <span
+            v-if="submitted && !$v.form.code.required"
+            class="invalid-feedback"
+          >
+            Course code is required
+          </span>
+          <span
+            v-if="submitted && !$v.form.code.maxLength"
+            class="invalid-feedback"
+          >
+            Course code cannot be more than
+            {{ $v.form.code.$params.maxLength.max }} characters.
+          </span>
         </b-form-group>
-        <span v-if="errors.code">
-          {{ errors.code }}
-        </span>
+
+        <!-- Description -->
         <b-form-group
           id="description"
           label="Course description:"
@@ -34,7 +69,17 @@
             type="text"
             placeholder="Enter description"
             required
+            :class="{ 'is-invalid': submitted && $v.form.description.$error }"
           ></b-form-input>
+          <!-- Error message for description -->
+          <span
+            v-if="submitted && !$v.form.description.required"
+            class="invalid-feedback"
+          >
+            Description is required
+          </span>
+
+          <!-- Points -->
         </b-form-group>
         <b-form-group id="points" label="Course points:" label-for="points">
           <b-form-input
@@ -43,13 +88,23 @@
             type="text"
             placeholder="Enter points"
             required
+            :class="{ 'is-invalid': submitted && $v.form.points.$error }"
           ></b-form-input>
-          <span v-if="errors.points">
-            <p v-for="error in errors.points" :key="error">
-              {{ error }}
-            </p>
-          </span>
+          <!-- Error message for points -->
+          <span
+            v-if="submitted && !$v.form.points.required"
+            class="invalid-feedback"
+            >Points is required</span
+          >
+          <span
+            v-if="submitted && !$v.form.points.between"
+            class="invalid-feedback"
+            >Points must be between {{ $v.form.points.$params.between.min }} and
+            {{ $v.form.points.$params.between.max }}</span
+          >
         </b-form-group>
+
+        <!-- Level  -->
         <b-form-group id="level" label="Course level:" label-for="level">
           <b-form-input
             id="level"
@@ -57,11 +112,26 @@
             type="text"
             placeholder="Enter level"
             required
+            :class="{ 'is-invalid': submitted && $v.form.level.$error }"
           ></b-form-input>
+          <!-- Error message for points -->
+          <span
+            v-if="submitted && !$v.form.level.required"
+            class="invalid-feedback"
+            >Level is required</span
+          >
+          <span
+            v-if="submitted && !$v.form.level.between"
+            class="invalid-feedback"
+            >Level must be between {{ $v.form.level.$params.between.min }} and
+            {{ $v.form.level.$params.between.max }}</span
+          >
         </b-form-group>
 
         <b-button type="submit" variant="primary">Submit</b-button>
-        <b-button type="reset" variant="danger">Reset</b-button>
+        <b-button type="reset" variant="danger" @click="$v.$reset"
+          >Reset</b-button
+        >
       </b-form>
     </b-card>
   </div>
@@ -69,6 +139,12 @@
 
 <script>
 import axios from "axios";
+import {
+  required,
+  maxLength,
+  integer,
+  between,
+} from "vuelidate/lib/validators";
 
 export default {
   name: "CourseCreate",
@@ -83,12 +159,37 @@ export default {
       },
       errors: {},
       show: true,
+      submitted: false,
     };
+  },
+  validations: {
+    form: {
+      title: { required, maxLength: maxLength(50) },
+      code: { required, maxLength: maxLength(5) },
+      description: { required },
+      points: {
+        required,
+        integer,
+        between: between(100, 600),
+      },
+      level: {
+        required,
+        integer,
+        between: between(7, 10),
+      },
+    },
   },
   methods: {
     createCourse() {
       let token = localStorage.getItem("token");
+      this.submitted = true;
 
+      // stop here if form is invalid
+      this.$v.$touch();
+      if (this.$v.$invalid) {
+        return;
+      }
+      // else Post form
       axios
         .post(
           "https://craig-college-api.herokuapp.com/api/courses",
@@ -116,7 +217,6 @@ export default {
         });
     },
     onReset() {
-      // e.preventDefault();
       // Reset our form values
       this.form.title = "";
       this.form.code = "";
