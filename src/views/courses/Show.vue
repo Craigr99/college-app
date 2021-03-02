@@ -10,7 +10,7 @@
         <p>Level: {{ course.level }}</p>
         <b-button href="#" variant="primary" class="mr-2">
           <router-link
-            :to="{ name: 'courses_edit', params: { courseId: course.id } }"
+            :to="{ name: 'courses_edit', params: { id: course.id } }"
             class="text-white"
           >
             Edit
@@ -39,15 +39,12 @@ export default {
   methods: {
     getCourse() {
       let token = localStorage.getItem("token");
-      let courseId = this.$route.params.courseId;
+      let id = this.$route.params.id;
 
       axios
-        .get(
-          `https://craig-college-api.herokuapp.com/api/courses/${courseId}`,
-          {
-            headers: { Authorization: "Bearer " + token },
-          }
-        )
+        .get(`https://craig-college-api.herokuapp.com/api/courses/${id}`, {
+          headers: { Authorization: "Bearer " + token },
+        })
         .then((response) => {
           console.log(response.data.data);
           this.course = response.data.data;

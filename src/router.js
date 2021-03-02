@@ -7,6 +7,7 @@ import Login from "./views/Login";
 import Register from "./views/Register";
 import CoursesIndex from "./views/courses/Index";
 import CoursesShow from "./views/courses/Show";
+import CoursesCreate from "./views/courses/Create";
 import CoursesEdit from "./views/courses/Edit";
 import EnrolmentsIndex from "./views/enrolments/Index";
 import LecturersIndex from "./views/lecturers/Index";
@@ -74,16 +75,24 @@ export default new Router({
       beforeEnter: guardRoute,
     },
     {
-      path: "/courses/:courseId",
+      path: "/courses/create",
+      name: "courses_create",
+      component: CoursesCreate,
+      beforeEnter: guardRoute
+    },
+    {
+      path: "/courses/:id",
       name: "courses_show",
       component: CoursesShow,
       beforeEnter: guardRoute
     },
     {
-      path: "/courses/:courseId/edit",
+      path: "/courses/:id/edit",
       name: "courses_edit",
-      component: CoursesEdit
+      component: CoursesEdit,
+      beforeEnter: guardRoute
     },
+
     {
       path: "/enrolments",
       name: "enrolments_index",

@@ -1,15 +1,21 @@
 <template>
   <div>
-    <h1>this is the courses index page</h1>
-    <br />
-
-    <div v-for="course in courses" :key="course.id">
-      <router-link
-        :to="{ name: 'courses_show', params: { courseId: course.id } }"
-      >
-        <p>{{ course.title }}</p>
-      </router-link>
+    <div class="d-flex justify-content-between align-items-center">
+      <h2>Courses</h2>
+      <b-button variant="outline-primary" size="sm">
+        <router-link :to="{ name: 'courses_create' }"> Add Course </router-link>
+      </b-button>
     </div>
+
+    <b-table striped hover :items="courses" :fields="fields">
+      <template #cell(title)="data">
+        <router-link
+          :to="{ name: 'courses_show', params: { id: data.item.id } }"
+        >
+          {{ data.item.title }}
+        </router-link>
+      </template>
+    </b-table>
   </div>
 </template>
 
@@ -22,6 +28,18 @@ export default {
   data() {
     return {
       courses: [],
+      fields: [
+        {
+          key: "title",
+          sortable: true,
+        },
+        "code",
+        "points",
+        {
+          key: "level",
+          sortable: true,
+        },
+      ],
     };
   },
   mounted() {
