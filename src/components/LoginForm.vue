@@ -14,7 +14,16 @@
             type="email"
             placeholder="Enter email"
             required
+            :state="isEmailStateValid"
           ></b-form-input>
+          <!-- Error message -->
+          <span v-if="errors.email">
+            <p v-for="error in errors.email" :key="error.id">
+              <b-form-invalid-feedback :state="isEmailStateValid">
+                {{ error }}
+              </b-form-invalid-feedback>
+            </p>
+          </span>
         </b-form-group>
 
         <b-form-group id="password" label="Your Password:" label-for="password">
@@ -24,7 +33,23 @@
             v-model="form.password"
             placeholder="Enter password"
             required
+            :class="errors.password ? 'is-invalid' : ''"
           ></b-form-input>
+          <span v-if="errors.password">
+            <p v-for="error in errors.password" :key="error.id">
+              <b-form-invalid-feedback :state="validation">
+                {{ error }}
+              </b-form-invalid-feedback>
+              <b-form-valid-feedback :state="validation">
+                Looks Good.
+              </b-form-valid-feedback>
+            </p>
+          </span>
+          <span v-if="errors === 'Unauthorised'">
+            <b-form-invalid-feedback :state="false">
+              {{ errors }} These credentials do not match our records.
+            </b-form-invalid-feedback>
+          </span>
         </b-form-group>
 
         <b-button type="submit" variant="primary">Submit</b-button>
@@ -47,9 +72,21 @@ export default {
         checked: [],
       },
       show: true,
+      errors: [],
     };
   },
+  computed: {
+    isEmailStateValid() {
+      if (this.form.email) {
+        return this.isValid(this.form.email);
+      }
+      return null;
+    },
+  },
   methods: {
+    isValid() {
+      return this.form.email.length > 3 ? true : false; //your validation criteria goes here
+    },
     login() {
       axios
         .post("https://craig-college-api.herokuapp.com/api/login", {
@@ -64,15 +101,16 @@ export default {
           this.$emit("login");
         })
         .catch((error) => {
-          console.log(error);
-          console.log(error.response.data);
+          this.errors = error.response.data.error;
+          console.log(this.errors);
         });
     },
-    onReset(event) {
-      event.preventDefault();
+    onReset() {
+      // e.preventDefault();
       // Reset our form values
       this.form.email = "";
       this.form.password = "";
+      this.errors = "";
       // Trick to reset/clear native browser form validation state
       this.show = false;
       this.$nextTick(() => {
