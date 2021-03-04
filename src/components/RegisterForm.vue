@@ -180,8 +180,10 @@ export default {
     },
     onReset() {
       // Reset our form values
+      this.form.name = "";
       this.form.email = "";
       this.form.password = "";
+      this.form.repeatPassword = "";
       // Trick to reset/clear native browser form validation state
       this.show = false;
       this.$nextTick(() => {

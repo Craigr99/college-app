@@ -16,7 +16,9 @@
             Edit
           </router-link>
         </b-button>
-        <b-button href="#" variant="danger">Delete</b-button>
+        <b-button href="#" variant="danger" @click="deleteCourse()"
+          >Delete</b-button
+        >
       </b-card>
     </div>
   </div>
@@ -48,6 +50,22 @@ export default {
         .then((response) => {
           console.log(response.data.data);
           this.course = response.data.data;
+        })
+        .catch((error) => {
+          console.log(error);
+          console.log(error.response.data);
+        });
+    },
+    deleteCourse() {
+      let token = localStorage.getItem("token");
+      let id = this.$route.params.id;
+
+      axios
+        .delete(`https://craig-college-api.herokuapp.com/api/courses/${id}`, {
+          headers: { Authorization: "Bearer " + token },
+        })
+        .then(() => {
+          this.$router.replace({ name: "courses_index" });
         })
         .catch((error) => {
           console.log(error);

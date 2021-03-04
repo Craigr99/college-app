@@ -25,7 +25,7 @@ export default {
   components: {
     Navbar,
   },
-  mounted() {
+  created() {
     this.checkIfLogged();
   },
   data() {
@@ -56,6 +56,12 @@ export default {
 </script>
 
 <style>
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@100;400;500&display=swap");
+
+body {
+  font-family: "Poppins", sans-serif;
+}
+
 /* #nav {
   padding: 30px;
 }

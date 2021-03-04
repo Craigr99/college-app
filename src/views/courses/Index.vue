@@ -7,7 +7,11 @@
       </b-button>
     </div>
 
+    <div v-if="loading" class="d-flex align-items-center">
+      <b-spinner label="Loading..." class="mx-auto"></b-spinner>
+    </div>
     <b-table
+      v-else
       responsive
       striped
       hover
@@ -35,6 +39,7 @@ export default {
   data() {
     return {
       courses: [],
+      loading: true,
       fields: [
         {
           key: "title",
@@ -68,6 +73,7 @@ export default {
         .then((response) => {
           console.log(response.data.data);
           this.courses = response.data.data;
+          this.loading = false;
         })
         .catch((error) => {
           console.log(error);

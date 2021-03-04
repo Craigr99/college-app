@@ -1,7 +1,13 @@
 <template>
   <div>
     <b-card>
-      <b-form @submit.prevent="login()" @reset="onReset()" v-if="show">
+      <b-form
+        @submit.prevent="login()"
+        @reset="onReset()"
+        v-if="show"
+        novalidate
+      >
+        <!-- Email -->
         <b-form-group
           id="input-group-1"
           label="Email address:"
@@ -14,9 +20,27 @@
             type="email"
             placeholder="Enter email"
             required
+            :class="{
+              'is-invalid': (submitted && $v.form.email.$error) || errors.email,
+            }"
           ></b-form-input>
+          <!-- Error message for email -->
+          <span v-if="submitted && errors.email" class="invalid-feedback">{{
+            errors.email[0]
+          }}</span>
+          <span
+            v-if="submitted && !$v.form.email.required"
+            class="invalid-feedback"
+            >Email is required</span
+          >
+          <span
+            v-if="submitted && !$v.form.email.email"
+            class="invalid-feedback"
+            >Must be a valid email (example@gmail.com)</span
+          >
         </b-form-group>
 
+        <!-- Password -->
         <b-form-group id="password" label="Your Password:" label-for="password">
           <b-form-input
             id="password"
@@ -24,11 +48,28 @@
             v-model="form.password"
             placeholder="Enter password"
             required
+            :class="{
+              'is-invalid': submitted && $v.form.password.$error,
+            }"
           ></b-form-input>
+          <!-- Error messages for password -->
+          <span
+            v-if="submitted && !$v.form.password.required"
+            class="invalid-feedback"
+            >Password is required</span
+          >
+          <span
+            v-if="submitted && !$v.form.password.minLength"
+            class="invalid-feedback"
+            >Password must be
+            {{ $v.form.password.$params.minLength.min }} characters.
+          </span>
         </b-form-group>
 
         <b-button type="submit" variant="primary">Submit</b-button>
-        <b-button type="reset" variant="danger">Reset</b-button>
+        <b-button type="reset" variant="danger" @click="$v.$reset"
+          >Reset</b-button
+        >
       </b-form>
     </b-card>
   </div>
@@ -36,6 +77,7 @@
 
 <script>
 import axios from "axios";
+import { required, minLength, email } from "vuelidate/lib/validators";
 
 export default {
   name: "LoginForm",
@@ -47,11 +89,26 @@ export default {
         checked: [],
       },
       show: true,
-      errors: [],
+      errors: {},
+      submitted: false,
     };
+  },
+  validations: {
+    form: {
+      email: { required, email },
+      password: { required, minLength: minLength(6) },
+    },
   },
   methods: {
     login() {
+      this.submitted = true;
+
+      // stop here if form is invalid
+      this.$v.$touch();
+      if (this.$v.$invalid) {
+        return;
+      }
+      // else Post form
       axios
         .post("https://craig-college-api.herokuapp.com/api/login", {
           email: this.form.email,
@@ -65,8 +122,10 @@ export default {
           this.$emit("login");
         })
         .catch((error) => {
-          this.errors = error.response.data.error;
-          console.log(this.errors);
+          if (error.response.data) {
+            this.errors = error.response.data.error;
+            console.log(this.errors);
+          }
         });
     },
     onReset() {
