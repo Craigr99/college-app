@@ -29,7 +29,6 @@ import axios from "axios";
 
 export default {
   name: "CourseShow",
-  components: {},
   data() {
     return {
       course: [],
@@ -57,19 +56,43 @@ export default {
         });
     },
     deleteCourse() {
-      let token = localStorage.getItem("token");
-      let id = this.$route.params.id;
+      this.$bvModal
+        .msgBoxConfirm("Please confirm that you want to delete the course.", {
+          title: "Please Confirm",
+          okVariant: "danger",
+          okTitle: "DELETE",
+          headerBgVariant: "dark",
+          headerTextVariant: "light",
+          cancelTitle: "BACK",
+          footerClass: "p-2",
+          hideHeaderClose: false,
+          centered: true,
+        })
+        .then((value) => {
+          if (value === true) {
+            //DELETE
+            let token = localStorage.getItem("token");
+            let id = this.$route.params.id;
 
-      axios
-        .delete(`https://craig-college-api.herokuapp.com/api/courses/${id}`, {
-          headers: { Authorization: "Bearer " + token },
+            axios
+              .delete(
+                `https://craig-college-api.herokuapp.com/api/courses/${id}`,
+                {
+                  headers: { Authorization: "Bearer " + token },
+                }
+              )
+              .then(() => {
+                this.$router.replace({ name: "courses_index" });
+              })
+              .catch((error) => {
+                console.log(error);
+                console.log(error.response.data);
+              });
+          }
         })
-        .then(() => {
-          this.$router.replace({ name: "courses_index" });
-        })
-        .catch((error) => {
-          console.log(error);
-          console.log(error.response.data);
+        .catch((err) => {
+          // An error occurred
+          console.log(err);
         });
     },
   },

@@ -60,6 +60,7 @@ export default {
 
 body {
   font-family: "Poppins", sans-serif;
+  background-color: #f9fafb !important;
 }
 
 /* #nav {
