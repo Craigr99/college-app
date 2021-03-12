@@ -41,7 +41,7 @@
             <b-nav-item-dropdown right v-if="loggedIn">
               <!-- Using 'button-content' slot -->
               <template #button-content>
-                <em>User</em>
+                <em>{{ name }}</em>
               </template>
               <b-dropdown-item>
                 <router-link :to="{ name: 'user_dashboard' }">
@@ -63,6 +63,7 @@ import axios from "axios";
 export default {
   props: {
     loggedIn: Boolean,
+    name: String,
   },
   data() {
     return {};

@@ -5,6 +5,7 @@
       v-on:login="setLoggedIn"
       v-on:logout="setLoggedOut"
       :loggedIn="this.loggedIn"
+      :name="this.user.name"
     />
     <b-container class="mt-5">
       <router-view
@@ -18,6 +19,7 @@
 </template>
 
 <script>
+import axios from "axios";
 import Navbar from "./components/Navbar";
 
 export default {
@@ -32,6 +34,9 @@ export default {
     return {
       loggedIn: false,
       token: "",
+      user: {
+        name: "",
+      },
     };
   },
   methods: {
@@ -39,17 +44,31 @@ export default {
       let token = localStorage.getItem("token");
       if (token) {
         this.loggedIn = true;
+        this.getUser();
       }
     },
     setLoggedIn() {
       this.loggedIn = true;
       this.token = localStorage.getItem("token");
+      this.getUser();
     },
     setLoggedOut() {
       this.loggedIn = false;
     },
-    registering() {
-      this.loggedIn = true;
+    getUser() {
+      this.token = localStorage.getItem("token");
+
+      axios
+        .get("https://craig-college-api.herokuapp.com/api/user", {
+          headers: { Authorization: "Bearer " + this.token },
+        })
+        .then((response) => {
+          console.log(response.data.user);
+          this.user.name = response.data.user.name;
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     },
   },
 };

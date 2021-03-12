@@ -21,10 +21,16 @@
             placeholder="Enter email"
             required
             :class="{
-              'is-invalid': (submitted && $v.form.email.$error) || errors.email,
+              'is-invalid':
+                (submitted && $v.form.email.$error) ||
+                errors.email ||
+                errors[0],
             }"
           ></b-form-input>
           <!-- Error message for email -->
+          <span v-if="submitted && errors[0]" class="invalid-feedback">{{
+            errors
+          }}</span>
           <span v-if="submitted && errors.email" class="invalid-feedback">{{
             errors.email[0]
           }}</span>
