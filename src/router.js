@@ -11,6 +11,8 @@ import CoursesCreate from "./views/courses/Create";
 import CoursesEdit from "./views/courses/Edit";
 import EnrolmentsIndex from "./views/enrolments/Index";
 import LecturersIndex from "./views/lecturers/Index";
+import LecturersCreate from "./views/lecturers/Create";
+import LecturersShow from "./views/lecturers/Show";
 
 Vue.use(Router);
 
@@ -103,6 +105,18 @@ export default new Router({
       path: "/lecturers",
       name: "lecturers_index",
       component: LecturersIndex,
+      beforeEnter: guardRoute
+    },
+    {
+      path: "/lecturers/create",
+      name: "lecturers_create",
+      component: LecturersCreate,
+      beforeEnter: guardRoute
+    },
+    {
+      path: "/lecturers/:id",
+      name: "lecturers_show",
+      component: LecturersShow,
       beforeEnter: guardRoute
     },
   ]
