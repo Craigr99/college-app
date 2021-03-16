@@ -28,7 +28,7 @@
         <p>Level: {{ course.level }}</p>
 
         <!-- Buttons -->
-        <b-button href="#" variant="secondary" class="mr-2">
+        <b-button href="#" variant="secondary">
           <router-link
             :to="{ name: 'courses_index' }"
             class="flex align-items-center text-white"
@@ -37,7 +37,7 @@
             <span class="ml-1"> back</span>
           </router-link>
         </b-button>
-        <b-button href="#" variant="primary" class="mr-2">
+        <b-button href="#" variant="primary" class="mx-2">
           <router-link
             :to="{ name: 'courses_edit', params: { id: course.id } }"
             class="text-white"

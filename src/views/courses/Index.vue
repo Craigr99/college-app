@@ -1,5 +1,6 @@
 <template>
   <div>
+    <!-- Top section -->
     <div class="mb-3">
       <b-row class="align-items-center">
         <b-col>

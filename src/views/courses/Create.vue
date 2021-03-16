@@ -31,6 +31,12 @@
               >
                 Title is required
               </span>
+              <span
+                v-if="submitted && !$v.form.title.alpha"
+                class="invalid-feedback"
+              >
+                Title can contain letters only
+              </span>
 
               <span
                 v-if="submitted && !$v.form.title.maxLength"
@@ -152,7 +158,17 @@
           <!-- Points -->
         </b-form-group>
 
-        <b-button type="submit" variant="primary">Submit</b-button>
+        <!-- Buttons  -->
+        <b-button href="#" variant="secondary">
+          <router-link
+            :to="{ name: 'courses_index' }"
+            class="flex align-items-center text-white"
+          >
+            <b-icon-arrow-left></b-icon-arrow-left>
+            <span class="ml-1"> back</span>
+          </router-link>
+        </b-button>
+        <b-button type="submit" variant="primary" class="mx-2">Submit</b-button>
         <b-button type="reset" variant="danger" @click="$v.$reset"
           >Reset</b-button
         >
@@ -167,6 +183,7 @@ import {
   required,
   maxLength,
   integer,
+  alpha,
   between,
 } from "vuelidate/lib/validators";
 
@@ -188,7 +205,7 @@ export default {
   },
   validations: {
     form: {
-      title: { required, maxLength: maxLength(50) },
+      title: { required, alpha, maxLength: maxLength(50) },
       code: { required, maxLength: maxLength(5) },
       description: { required },
       points: {

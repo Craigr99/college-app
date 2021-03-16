@@ -1,15 +1,47 @@
 <template>
   <div>
-    <div class="d-flex justify-content-between align-items-center mb-3">
-      <h2>Lecturers</h2>
-      <b-button variant="outline-primary" size="sm">
-        <router-link :to="{ name: 'lecturers_create' }">
-          Add Lecturer
-        </router-link>
-      </b-button>
+    <!-- Top section -->
+    <div class="mb-3">
+      <b-row class="align-items-center">
+        <b-col>
+          <span class="d-flex">
+            <h2 class="mr-2">Lecturers</h2>
+            <b-button
+              class="align-self-center"
+              variant="outline-primary"
+              size="sm"
+            >
+              <router-link :to="{ name: 'lecturers_create' }">
+                Add Lecturer
+              </router-link>
+            </b-button>
+          </span>
+        </b-col>
+        <b-col>
+          <b-input-group>
+            <b-form-input
+              size="md"
+              placeholder="Search for a lecturer.."
+              v-model="term"
+            ></b-form-input>
+            <b-input-group-append>
+              <b-button
+                size="md"
+                variant="outline-primary"
+                @click="searchLecturer()"
+                >Search</b-button
+              >
+            </b-input-group-append>
+          </b-input-group>
+        </b-col>
+      </b-row>
     </div>
 
-    <div v-if="loading" class="d-flex align-items-center">
+    <div
+      v-if="loading"
+      class="d-flex align-items-center"
+      style="min-height: 75vh"
+    >
       <b-spinner label="Loading..." class="mx-auto"></b-spinner>
     </div>
     <b-table
@@ -17,7 +49,7 @@
       responsive
       striped
       hover
-      :items="lecturers"
+      :items="filteredLecturers"
       :fields="fields"
       head-variant="dark"
     >
@@ -60,7 +92,14 @@ export default {
           sortable: true,
         },
       ],
+      term: "",
+      filteredLecturers: [],
     };
+  },
+  watch: {
+    term: function () {
+      this.searchLecturer();
+    },
   },
   mounted() {
     this.getLecturers();
@@ -75,12 +114,25 @@ export default {
         .then((response) => {
           console.log(response.data.data);
           this.lecturers = response.data.data;
+          this.filteredLecturers = this.lecturers;
           this.loading = false;
         })
         .catch((error) => {
           console.log(error);
           console.log(error.response.data);
         });
+    },
+    searchLecturer() {
+      this.filteredLecturers = this.lecturers.filter((lecturer) => {
+        // Check lecturer name
+        if (lecturer.name.toLowerCase().includes(this.term.toLowerCase())) {
+          return true;
+        }
+        // Check lecturer email
+        if (lecturer.email.toLowerCase().includes(this.term.toLowerCase())) {
+          return true;
+        }
+      });
     },
   },
 };

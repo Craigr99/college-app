@@ -1,13 +1,6 @@
 <template>
   <div>
     <b-card>
-      <router-link
-        :to="{ name: 'courses_show', id: course.id }"
-        class="flex align-items-center"
-      >
-        <b-icon-arrow-left variant="primary"></b-icon-arrow-left>
-        <span class="ml-1"> back</span>
-      </router-link>
       <h2 class="pt-3 pb-4">Edit course</h2>
       <b-form @submit.prevent="updateCourse()" @reset="onReset()" novalidate>
         <b-row cols="1" cols-md="2">
@@ -24,12 +17,19 @@
                   'is-invalid': submitted && $v.course.title.$error,
                 }"
               ></b-form-input>
-              <!-- Error message for title -->
+              <!-- Error messages for title -->
               <span
                 v-if="submitted && !$v.course.title.required"
                 class="invalid-feedback"
               >
                 Title is required
+              </span>
+
+              <span
+                v-if="submitted && !$v.course.title.alpha"
+                class="invalid-feedback"
+              >
+                Title can contain letters only
               </span>
 
               <span
@@ -152,7 +152,17 @@
           <!-- Points -->
         </b-form-group>
 
-        <b-button type="submit" variant="primary">Submit</b-button>
+        <!-- Buttons -->
+        <b-button href="#" variant="secondary">
+          <router-link
+            :to="{ name: 'courses_index' }"
+            class="flex align-items-center text-white"
+          >
+            <b-icon-arrow-left></b-icon-arrow-left>
+            <span class="ml-1"> back</span>
+          </router-link>
+        </b-button>
+        <b-button type="submit" variant="primary" class="mx-2">Submit</b-button>
         <b-button type="reset" variant="danger" @click="$v.$reset"
           >Reset</b-button
         >
@@ -169,19 +179,13 @@ import {
   maxLength,
   integer,
   between,
+  alpha,
 } from "vuelidate/lib/validators";
 
 export default {
   name: "CourseEdit",
   data() {
     return {
-      // form: {
-      //   title: "",
-      //   code: "",
-      //   description: "",
-      //   points: "",
-      //   level: "",
-      // },
       errors: {},
       course: {
         title: "",
@@ -195,7 +199,7 @@ export default {
   },
   validations: {
     course: {
-      title: { required, maxLength: maxLength(50) },
+      title: { required, alpha, maxLength: maxLength(50) },
       code: { required, maxLength: maxLength(5) },
       description: { required },
       points: {
