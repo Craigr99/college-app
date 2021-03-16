@@ -162,7 +162,7 @@
 </template>
 
 <script>
-import axios from "axios";
+import axios from "@/config/api";
 import {
   required,
   maxLength,
@@ -216,7 +216,7 @@ export default {
       // else Post form
       axios
         .post(
-          "https://craig-college-api.herokuapp.com/api/courses",
+          "/courses",
           {
             title: this.form.title,
             code: this.form.code,

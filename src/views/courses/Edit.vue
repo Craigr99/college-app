@@ -162,7 +162,8 @@
 </template>
 
 <script>
-import axios from "axios";
+import axios from "@/config/api";
+
 import {
   required,
   maxLength,
@@ -218,7 +219,7 @@ export default {
       let id = this.$route.params.id;
 
       axios
-        .get(`https://craig-college-api.herokuapp.com/api/courses/${id}`, {
+        .get(`/courses/${id}`, {
           headers: { Authorization: "Bearer " + token },
         })
         .then((response) => {
@@ -243,7 +244,7 @@ export default {
       // else Post form
       axios
         .put(
-          `https://craig-college-api.herokuapp.com/api/courses/${id}`,
+          `/courses/${id}`,
           {
             title: this.course.title,
             code: this.course.code,

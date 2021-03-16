@@ -120,7 +120,7 @@
 </template>
 
 <script>
-import axios from "axios";
+import axios from "@/config/api";
 import { required, minLength, email, sameAs } from "vuelidate/lib/validators";
 
 export default {
@@ -159,7 +159,7 @@ export default {
       }
       // else Post form
       axios
-        .post("https://craig-college-api.herokuapp.com/api/register", {
+        .post("/register", {
           name: this.form.name,
           email: this.form.email,
           password: this.form.password,

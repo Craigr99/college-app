@@ -36,7 +36,7 @@
 </template>
 
 <script>
-import axios from "axios";
+import axios from "@/config/api";
 
 export default {
   name: "CourseShow",
@@ -54,7 +54,7 @@ export default {
       let id = this.$route.params.id;
 
       axios
-        .get(`https://craig-college-api.herokuapp.com/api/courses/${id}`, {
+        .get(`/courses/${id}`, {
           headers: { Authorization: "Bearer " + token },
         })
         .then((response) => {
@@ -94,25 +94,18 @@ export default {
               this.course.enrolments.forEach((enrolment) => {
                 console.log(enrolment.id);
                 axios
-                  .delete(
-                    "https://craig-college-api.herokuapp.com/api/enrolments/" +
-                      enrolment.id,
-                    {
-                      headers: { Authorization: "Bearer " + token },
-                    }
-                  )
+                  .delete("/enrolments/" + enrolment.id, {
+                    headers: { Authorization: "Bearer " + token },
+                  })
                   .catch(function (error) {
                     console.log(error);
                   });
               });
 
               axios
-                .delete(
-                  `https://craig-college-api.herokuapp.com/api/courses/${id}`,
-                  {
-                    headers: { Authorization: "Bearer " + token },
-                  }
-                )
+                .delete(`/courses/${id}`, {
+                  headers: { Authorization: "Bearer " + token },
+                })
                 .then(() => {
                   this.$router.replace({ name: "courses_index" });
                 })
@@ -146,12 +139,9 @@ export default {
               let token = localStorage.getItem("token");
               let id = this.$route.params.id;
               axios
-                .delete(
-                  `https://craig-college-api.herokuapp.com/api/courses/${id}`,
-                  {
-                    headers: { Authorization: "Bearer " + token },
-                  }
-                )
+                .delete(`/courses/${id}`, {
+                  headers: { Authorization: "Bearer " + token },
+                })
                 .then(() => {
                   this.$router.replace({ name: "courses_index" });
                 })

@@ -58,7 +58,7 @@
 </template>
 
 <script>
-import axios from "axios";
+import axios from "@/config/api";
 
 export default {
   props: {
@@ -72,7 +72,7 @@ export default {
     logout() {
       let token = localStorage.getItem("token");
       axios
-        .get("https://craig-college-api.herokuapp.com/api/logout", {
+        .get("/logout", {
           headers: { Authorization: "Bearer " + token },
         })
         .then((response) => {
