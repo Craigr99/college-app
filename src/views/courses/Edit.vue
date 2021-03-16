@@ -258,7 +258,7 @@ export default {
         )
         .then((response) => {
           console.log(response);
-          // this.$router.push({ name: "courses_index" });
+          this.$router.push({ name: "courses_index" });
         })
         .catch((error) => {
           console.log(error);

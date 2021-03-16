@@ -1,13 +1,46 @@
 <template>
   <div>
-    <div class="d-flex justify-content-between align-items-center mb-3">
-      <h2>Courses</h2>
-      <b-button variant="outline-primary" size="sm">
-        <router-link :to="{ name: 'courses_create' }"> Add Course </router-link>
-      </b-button>
+    <div class="mb-3">
+      <b-row class="align-items-center">
+        <b-col>
+          <span class="d-flex">
+            <h2 class="mr-2">Courses</h2>
+            <b-button
+              class="align-self-center"
+              variant="outline-primary"
+              size="sm"
+            >
+              <router-link :to="{ name: 'courses_create' }">
+                Add Course
+              </router-link>
+            </b-button>
+          </span>
+        </b-col>
+        <b-col>
+          <b-input-group>
+            <b-form-input
+              size="md"
+              placeholder="Search for a course.."
+              v-model="term"
+            ></b-form-input>
+            <b-input-group-append>
+              <b-button
+                size="md"
+                variant="outline-primary"
+                @click="searchCourse()"
+                >Search</b-button
+              >
+            </b-input-group-append>
+          </b-input-group>
+        </b-col>
+      </b-row>
     </div>
 
-    <div v-if="loading" class="d-flex align-items-center">
+    <div
+      v-if="loading"
+      class="d-flex align-items-center"
+      style="min-height: 75vh"
+    >
       <b-spinner label="Loading..." class="mx-auto"></b-spinner>
     </div>
     <b-table
@@ -15,7 +48,7 @@
       responsive
       striped
       hover
-      :items="courses"
+      :items="filteredCourses"
       :fields="fields"
       head-variant="dark"
     >
@@ -58,7 +91,14 @@ export default {
           sortable: true,
         },
       ],
+      term: "",
+      filteredCourses: [],
     };
+  },
+  watch: {
+    term: function () {
+      this.searchCourse();
+    },
   },
   mounted() {
     this.getCourses();
@@ -73,12 +113,25 @@ export default {
         .then((response) => {
           console.log(response.data.data);
           this.courses = response.data.data;
+          this.filteredCourses = this.courses;
           this.loading = false;
         })
         .catch((error) => {
           console.log(error);
           console.log(error.response.data);
         });
+    },
+    searchCourse() {
+      this.filteredCourses = this.courses.filter((course) => {
+        // Check course title
+        if (course.title.toLowerCase().includes(this.term.toLowerCase())) {
+          return true;
+        }
+        // Check course code
+        if (course.code.toLowerCase().includes(this.term.toLowerCase())) {
+          return true;
+        }
+      });
     },
   },
 };

@@ -1,6 +1,24 @@
 <template>
   <div>
-    <div>
+    <b-skeleton-wrapper :loading="loading">
+      <!-- Loading skeleton card -->
+      <template #loading>
+        <b-card class="py-2">
+          <b-skeleton width="40%"></b-skeleton>
+          <b-skeleton width="10%" class="my-2"></b-skeleton>
+          <b-skeleton width="100%"></b-skeleton>
+          <b-skeleton width="100%"></b-skeleton>
+          <b-skeleton width="100%"></b-skeleton>
+          <b-skeleton width="20%" class="my-4"></b-skeleton>
+          <b-skeleton width="10%"></b-skeleton>
+          <div class="d-flex mt-3">
+            <b-skeleton width="10%" type="button"></b-skeleton>
+            <b-skeleton width="10%" type="button" class="mx-2"></b-skeleton>
+            <b-skeleton width="10%" type="button"></b-skeleton>
+          </div>
+        </b-card>
+      </template>
+
       <b-card :title="course.title" :sub-title="course.code">
         <b-card-text>
           {{ course.description }}
@@ -31,7 +49,7 @@
           >Delete</b-button
         >
       </b-card>
-    </div>
+    </b-skeleton-wrapper>
   </div>
 </template>
 
@@ -43,6 +61,7 @@ export default {
   data() {
     return {
       course: [],
+      loading: true,
     };
   },
   mounted() {
@@ -60,6 +79,7 @@ export default {
         .then((response) => {
           console.log(response.data.data);
           this.course = response.data.data;
+          this.loading = false;
         })
         .catch((error) => {
           console.log(error);
