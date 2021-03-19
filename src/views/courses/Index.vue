@@ -60,6 +60,13 @@
           {{ data.item.title }}
         </router-link>
       </template>
+      <template #cell(actions)="data">
+        <router-link
+          :to="{ name: 'courses_edit', params: { id: data.item.id } }"
+        >
+          Edit
+        </router-link>
+      </template>
     </b-table>
   </div>
 </template>
@@ -91,6 +98,7 @@ export default {
           key: "level",
           sortable: true,
         },
+        "Actions",
       ],
       term: "",
       filteredCourses: [],
