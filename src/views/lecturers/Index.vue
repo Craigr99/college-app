@@ -72,7 +72,7 @@
 </template>
 
 <script>
-import axios from "axios";
+import axios from "@/config/api";
 
 export default {
   name: "LecturerIndex",
@@ -116,7 +116,7 @@ export default {
     getLecturers() {
       let token = localStorage.getItem("token");
       axios
-        .get("https://craig-college-api.herokuapp.com/api/lecturers", {
+        .get("/lecturers", {
           headers: { Authorization: "Bearer " + token },
         })
         .then((response) => {
