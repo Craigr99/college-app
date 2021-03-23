@@ -1,13 +1,6 @@
 <template>
   <div>
     <b-card>
-      <router-link
-        :to="{ name: 'courses_index' }"
-        class="flex align-items-center"
-      >
-        <b-icon-arrow-left variant="primary"></b-icon-arrow-left>
-        <span class="ml-1"> back</span>
-      </router-link>
       <h2 class="pt-3 pb-4">Add a new course</h2>
       <b-form @submit.prevent="createCourse()" @reset="onReset()" novalidate>
         <b-row cols="1" cols-md="2">
@@ -32,7 +25,7 @@
                 Title is required
               </span>
               <span
-                v-if="submitted && !$v.form.title.alpha"
+                v-if="submitted && !$v.form.title.isString"
                 class="invalid-feedback"
               >
                 Title can contain letters only
@@ -183,9 +176,10 @@ import {
   required,
   maxLength,
   integer,
-  alpha,
   between,
+  helpers,
 } from "vuelidate/lib/validators";
+const isString = helpers.regex("isString", /^[a-z_ ]*$/i);
 
 export default {
   name: "CourseCreate",
@@ -205,7 +199,7 @@ export default {
   },
   validations: {
     form: {
-      title: { required, alpha, maxLength: maxLength(50) },
+      title: { required, isString, maxLength: maxLength(50) },
       code: { required, maxLength: maxLength(5) },
       description: { required },
       points: {

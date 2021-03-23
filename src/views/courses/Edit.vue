@@ -26,7 +26,7 @@
               </span>
 
               <span
-                v-if="submitted && !$v.course.title.alpha"
+                v-if="submitted && !$v.course.title.isString"
                 class="invalid-feedback"
               >
                 Title can contain letters only
@@ -179,8 +179,9 @@ import {
   maxLength,
   integer,
   between,
-  alpha,
+  helpers,
 } from "vuelidate/lib/validators";
+const isString = helpers.regex("isString", /^[a-z_ ]*$/i);
 
 export default {
   name: "CourseEdit",
@@ -199,7 +200,7 @@ export default {
   },
   validations: {
     course: {
-      title: { required, alpha, maxLength: maxLength(50) },
+      title: { required, isString, maxLength: maxLength(50) },
       code: { required, maxLength: maxLength(5) },
       description: { required },
       points: {
