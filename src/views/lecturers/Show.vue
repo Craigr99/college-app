@@ -35,18 +35,18 @@
             <span class="ml-1"> back</span>
           </router-link>
         </b-button>
-        <!-- 
+
         <b-button href="#" variant="primary" class="mx-2">
           <router-link
-            :to="{ name: 'courses_edit', params: { id: course.id } }"
+            :to="{ name: 'lecturers_edit', params: { id: lecturer.id } }"
             class="text-white"
           >
             Edit
           </router-link>
         </b-button>
-        <b-button href="#" variant="danger" @click="deleteCourse()"
+        <b-button href="#" variant="danger" @click="deleteLecturer()"
           >Delete</b-button
-        > -->
+        >
       </b-card>
     </b-skeleton-wrapper>
   </div>

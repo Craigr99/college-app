@@ -64,7 +64,7 @@
         <router-link
           :to="{ name: 'courses_edit', params: { id: data.item.id } }"
         >
-          Edit
+          <b-button size="sm" variant="outline-primary">Edit</b-button>
         </router-link>
       </template>
     </b-table>
