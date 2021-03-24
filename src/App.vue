@@ -82,6 +82,10 @@ body {
   background-color: #f9fafb !important;
 }
 
+a:hover {
+  text-decoration: none !important;
+}
+
 /* #nav {
   padding: 30px;
 }

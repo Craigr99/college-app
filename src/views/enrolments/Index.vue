@@ -6,7 +6,7 @@
         <b-col>
           <span class="d-flex">
             <h2 class="mr-2">Enrolments</h2>
-            <!-- <b-button
+            <b-button
               class="align-self-center"
               variant="outline-primary"
               size="sm"
@@ -14,7 +14,7 @@
               <router-link :to="{ name: 'enrolments_create' }">
                 Add Enrolment
               </router-link>
-            </b-button> -->
+            </b-button>
           </span>
         </b-col>
         <b-col>
@@ -104,15 +104,21 @@ export default {
           sortable: true,
         },
         {
+          key: "time",
+          sortable: true,
+        },
+        {
           key: "status",
           sortable: true,
         },
         {
           key: "lecturer",
+          label: "Lecturer",
           sortable: true,
         },
         {
           key: "course",
+          label: "Course",
           sortable: true,
         },
         "Actions",
@@ -151,6 +157,28 @@ export default {
       this.filteredEnrolments = this.enrolments.filter((enrolment) => {
         // Check enrolment date
         if (enrolment.date.toLowerCase().includes(this.term.toLowerCase())) {
+          return true;
+        }
+        // Check enrolment time
+        if (enrolment.time.toLowerCase().includes(this.term.toLowerCase())) {
+          return true;
+        }
+        // Check enrolment status
+        if (enrolment.status.toLowerCase().includes(this.term.toLowerCase())) {
+          return true;
+        }
+        // Check enrolment lecturer
+        if (
+          enrolment.lecturer.name
+            .toLowerCase()
+            .includes(this.term.toLowerCase())
+        ) {
+          return true;
+        }
+        // Check enrolment course
+        if (
+          enrolment.course.title.toLowerCase().includes(this.term.toLowerCase())
+        ) {
           return true;
         }
       });

@@ -1,14 +1,19 @@
 <template>
   <div>
     <h1>Welcome home {{ user.name }}</h1>
+    <ImageLinks />
   </div>
 </template>
 
 <script>
+import ImageLinks from "../../components/ImageLinks";
 import axios from "axios";
 
 export default {
   name: "UserDashboard",
+  components: {
+    ImageLinks,
+  },
   data() {
     return {
       user: [],
