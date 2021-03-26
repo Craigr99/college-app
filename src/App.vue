@@ -9,10 +9,7 @@
     />
     <b-container class="mt-5">
       <!-- Flash message  -->
-      <FlashMessage
-        :alertMessage="this.alertMessage"
-        :dismissCountDown="this.dismissCountDown"
-      />
+      <flash-message transitionIn="animated swing" class="flash-message" />
 
       <router-view
         :loggedIn="this.loggedIn"
@@ -20,6 +17,8 @@
         v-on:logout="setLoggedOut"
         v-on:register="setLoggedIn"
         v-on:courseCreated="courseCreated"
+        v-on:courseUpdated="courseUpdated"
+        v-on:courseDeleted="courseDeleted"
       />
     </b-container>
   </div>
@@ -28,23 +27,22 @@
 <script>
 import axios from "@/config/api";
 import Navbar from "./components/Navbar";
-import FlashMessage from "@/components/FlashMessage.vue";
+import FlashMessage from "./components/FlashMessage.vue";
+require("vue-flash-message/dist/vue-flash-message.min.css");
 
 export default {
   name: "App",
   components: {
     Navbar,
-    FlashMessage,
   },
   created() {
+    FlashMessage;
     this.checkIfLogged();
   },
   data() {
     return {
       loggedIn: false,
-      token: "",
-      alertMessage: "",
-      dismissCountDown: 0,
+
       user: {
         name: "",
       },
@@ -82,10 +80,19 @@ export default {
         });
     },
     courseCreated() {
-      this.alertMessage = " Success ";
-      this.dismissCountDown = 3;
-      console.log("course created");
-      console.log(this.dismissCountDown);
+      this.flash("Course Created Successfully!", "success", {
+        timeout: 3000,
+      });
+    },
+    courseUpdated() {
+      this.flash("Course Updated Successfully!", "info", {
+        timeout: 3000,
+      });
+    },
+    courseDeleted() {
+      this.flash("Course Deleted Successfully!", "error", {
+        timeout: 3000,
+      });
     },
   },
 };
@@ -101,6 +108,15 @@ body {
 
 a:hover {
   text-decoration: none !important;
+}
+
+.flash-message {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  max-height: 400px;
+  width: 360px;
+  z-index: 10;
 }
 
 /* #nav {

@@ -127,6 +127,7 @@ export default {
                   headers: { Authorization: "Bearer " + token },
                 })
                 .then(() => {
+                  this.$emit("courseDeleted");
                   this.$router.replace({ name: "courses_index" });
                 })
                 .catch((error) => {
@@ -163,6 +164,7 @@ export default {
                   headers: { Authorization: "Bearer " + token },
                 })
                 .then(() => {
+                  this.$emit("courseDeleted");
                   this.$router.replace({ name: "courses_index" });
                 })
                 .catch((error) => {
