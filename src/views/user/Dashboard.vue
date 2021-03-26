@@ -7,7 +7,7 @@
 
 <script>
 import ImageLinks from "../../components/ImageLinks";
-import axios from "axios";
+import axios from "@/config/api";
 
 export default {
   name: "UserDashboard",
@@ -26,7 +26,7 @@ export default {
     getUser() {
       let token = localStorage.getItem("token");
       axios
-        .get("https://craig-college-api.herokuapp.com/api/user", {
+        .get("/user", {
           headers: { Authorization: "Bearer " + token },
         })
         .then((response) => {

@@ -241,6 +241,7 @@ export default {
         )
         .then((response) => {
           console.log(response);
+          this.$emit("courseCreated");
           this.$router.push({ name: "courses_index" });
         })
         .catch((error) => {

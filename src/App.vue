@@ -8,24 +8,33 @@
       :name="this.user.name"
     />
     <b-container class="mt-5">
+      <!-- Flash message  -->
+      <FlashMessage
+        :alertMessage="this.alertMessage"
+        :dismissCountDown="this.dismissCountDown"
+      />
+
       <router-view
         :loggedIn="this.loggedIn"
         v-on:login="setLoggedIn"
         v-on:logout="setLoggedOut"
         v-on:register="setLoggedIn"
+        v-on:courseCreated="courseCreated"
       />
     </b-container>
   </div>
 </template>
 
 <script>
-import axios from "axios";
+import axios from "@/config/api";
 import Navbar from "./components/Navbar";
+import FlashMessage from "@/components/FlashMessage.vue";
 
 export default {
   name: "App",
   components: {
     Navbar,
+    FlashMessage,
   },
   created() {
     this.checkIfLogged();
@@ -34,6 +43,8 @@ export default {
     return {
       loggedIn: false,
       token: "",
+      alertMessage: "",
+      dismissCountDown: 0,
       user: {
         name: "",
       },
@@ -59,7 +70,7 @@ export default {
       this.token = localStorage.getItem("token");
 
       axios
-        .get("https://craig-college-api.herokuapp.com/api/user", {
+        .get("/user", {
           headers: { Authorization: "Bearer " + this.token },
         })
         .then((response) => {
@@ -69,6 +80,12 @@ export default {
         .catch((error) => {
           console.log(error);
         });
+    },
+    courseCreated() {
+      this.alertMessage = " Success ";
+      this.dismissCountDown = 3;
+      console.log("course created");
+      console.log(this.dismissCountDown);
     },
   },
 };

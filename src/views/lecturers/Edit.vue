@@ -1,7 +1,7 @@
 <template>
   <div>
     <b-card>
-      <h2 class="pt-3 pb-4">Edit a new lecturer</h2>
+      <h2 class="pt-3 pb-4">Edit a lecturer</h2>
       <b-form @submit.prevent="updateLecturer()" @reset="onReset()" novalidate>
         <b-row cols="1" cols-md="2">
           <b-col>
@@ -211,6 +211,8 @@ export default {
       if (this.$v.$invalid) {
         return;
       }
+
+      console.log(this.lecturer);
       // else Post form
       axios
         .put(

@@ -76,11 +76,11 @@ import axios from "@/config/api";
 
 export default {
   name: "CourseIndex",
-  components: {},
   data() {
     return {
       courses: [],
       loading: true,
+
       fields: [
         {
           key: "title",
@@ -104,13 +104,13 @@ export default {
       filteredCourses: [],
     };
   },
+  mounted() {
+    this.getCourses();
+  },
   watch: {
     term: function () {
       this.searchCourse();
     },
-  },
-  mounted() {
-    this.getCourses();
   },
   methods: {
     getCourses() {
