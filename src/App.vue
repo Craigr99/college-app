@@ -16,9 +16,12 @@
         v-on:login="setLoggedIn"
         v-on:logout="setLoggedOut"
         v-on:register="setLoggedIn"
-        v-on:courseCreated="courseCreated"
-        v-on:courseUpdated="courseUpdated"
-        v-on:courseDeleted="courseDeleted"
+        v-on:courseCreated="successMessage('Course')"
+        v-on:courseUpdated="infoMessage('Course')"
+        v-on:courseDeleted="deleteMessage('Course')"
+        v-on:lecturerCreated="successMessage('Lecturer')"
+        v-on:lecturerUpdated="infoMessage('Lecturer')"
+        v-on:lecturerDeleted="deleteMessage('Lecturer')"
       />
     </b-container>
   </div>
@@ -86,18 +89,18 @@ export default {
           console.log(error);
         });
     },
-    courseCreated() {
-      this.flash("Course Created Successfully!", "success", {
+    successMessage(message) {
+      this.flash(message + " Created Successfully!", "success", {
         timeout: 3000,
       });
     },
-    courseUpdated() {
-      this.flash("Course Updated Successfully!", "info", {
+    infoMessage(message) {
+      this.flash(message + " Updated Successfully!", "info", {
         timeout: 3000,
       });
     },
-    courseDeleted() {
-      this.flash("Course Deleted Successfully!", "error", {
+    deleteMessage(message) {
+      this.flash(message + " Deleted Successfully!", "error", {
         timeout: 3000,
       });
     },

@@ -125,6 +125,7 @@ export default {
                   headers: { Authorization: "Bearer " + token },
                 })
                 .then(() => {
+                  this.$emit("lecturerDeleted");
                   this.$router.replace({ name: "lecturers_index" });
                 })
                 .catch((error) => {
@@ -164,6 +165,7 @@ export default {
                   headers: { Authorization: "Bearer " + token },
                 })
                 .then(() => {
+                  this.$emit("lecturerDeleted");
                   this.$router.replace({ name: "lecturers_index" });
                 })
                 .catch((error) => {

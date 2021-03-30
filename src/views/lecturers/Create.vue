@@ -205,6 +205,7 @@ export default {
         )
         .then((response) => {
           console.log(response);
+          this.$emit("lecturerCreated");
           this.$router.push({ name: "lecturers_index" });
         })
         .catch((error) => {
