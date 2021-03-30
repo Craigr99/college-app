@@ -1,6 +1,6 @@
 <template>
   <div>
-    <b-card>
+    <b-card title="Create an Account">
       <b-form
         @submit.prevent="register()"
         @reset="onReset()"
@@ -110,7 +110,9 @@
           >
         </b-form-group>
 
-        <b-button type="submit" variant="primary">Register</b-button>
+        <b-button type="submit" variant="primary" class="mr-2"
+          >Register</b-button
+        >
         <b-button type="reset" variant="danger" @click="$v.$reset"
           >Reset</b-button
         >

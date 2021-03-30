@@ -1,6 +1,6 @@
 <template>
   <div>
-    <b-card>
+    <b-card title="Login to your account">
       <b-form
         @submit.prevent="login()"
         @reset="onReset()"
@@ -72,7 +72,7 @@
           </span>
         </b-form-group>
 
-        <b-button type="submit" variant="primary">Submit</b-button>
+        <b-button type="submit" variant="primary" class="mr-2">Login</b-button>
         <b-button type="reset" variant="danger" @click="$v.$reset"
           >Reset</b-button
         >

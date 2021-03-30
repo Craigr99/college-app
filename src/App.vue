@@ -60,9 +60,16 @@ export default {
       this.loggedIn = true;
       this.token = localStorage.getItem("token");
       this.getUser();
+
+      this.flash("Logged in Successfully!", "success", {
+        timeout: 3000,
+      });
     },
     setLoggedOut() {
       this.loggedIn = false;
+      this.flash("Logged out Successfully!", "error", {
+        timeout: 3000,
+      });
     },
     getUser() {
       this.token = localStorage.getItem("token");
@@ -104,6 +111,8 @@ export default {
 body {
   font-family: "Poppins", sans-serif;
   background-color: #f9fafb !important;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 a:hover {

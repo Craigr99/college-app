@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1>Welcome home {{ user.name }}</h1>
+    <h1 class="mb-4">Welcome home {{ user.name }}</h1>
     <ImageLinks />
   </div>
 </template>
