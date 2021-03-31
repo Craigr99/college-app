@@ -79,10 +79,28 @@
       </template>
       <template #cell(actions)="data">
         <router-link
+          :to="{ name: 'enrolments_show', params: { id: data.item.id } }"
+        >
+          <b-button size="sm" variant="outline-primary"
+            ><b-icon-eye
+          /></b-button>
+        </router-link>
+        <router-link
           :to="{ name: 'enrolments_edit', params: { id: data.item.id } }"
         >
-          <b-button size="sm" variant="outline-primary">Edit</b-button>
+          <b-button
+            size="sm"
+            variant="outline-primary"
+            class="mx-md-2 my-2 my-md-0"
+            ><b-icon-pen
+          /></b-button>
         </router-link>
+        <b-button
+          size="sm"
+          variant="outline-danger"
+          @click="deleteEnrolment(data.item.id)"
+          ><b-icon-trash
+        /></b-button>
       </template>
     </b-table>
   </div>
@@ -128,7 +146,7 @@ export default {
     };
   },
   watch: {
-    term: function () {
+    term: function() {
       this.searchEnrolment();
     },
   },
@@ -151,6 +169,20 @@ export default {
         .catch((error) => {
           console.log(error);
           console.log(error.response.data);
+        });
+    },
+    getEnrolment(id) {
+      let token = localStorage.getItem("token");
+
+      axios
+        .get(`/enrolments/${id}`, {
+          headers: { Authorization: "Bearer " + token },
+        })
+        .then((response) => {
+          this.course = response.data.data;
+        })
+        .catch((error) => {
+          console.log(error);
         });
     },
     searchEnrolment() {
@@ -182,6 +214,46 @@ export default {
           return true;
         }
       });
+    },
+    deleteEnrolment(id) {
+      this.getEnrolment(id);
+
+      this.$bvModal
+        .msgBoxConfirm(
+          "Please confirm that you want to delete the enrolment.",
+          {
+            title: "Please Confirm",
+            okVariant: "danger",
+            okTitle: "DELETE",
+            headerBgVariant: "dark",
+            headerTextVariant: "light",
+            cancelTitle: "BACK",
+            footerClass: "p-2",
+            hideHeaderClose: false,
+            centered: true,
+          }
+        )
+        .then((value) => {
+          if (value === true) {
+            //DELETE
+            let token = localStorage.getItem("token");
+            axios
+              .delete(`/enrolments/${id}`, {
+                headers: { Authorization: "Bearer " + token },
+              })
+              .then(() => {
+                this.$emit("enrolmentDeleted");
+                this.getEnrolments();
+              })
+              .catch((error) => {
+                console.log(error);
+              });
+          }
+        })
+        .catch((err) => {
+          // An error occurred
+          console.log(err);
+        });
     },
   },
 };
