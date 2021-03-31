@@ -14,19 +14,16 @@
                 close-button
                 locale="en"
                 placeholder="Choose a date"
+                :class="{
+                  'is-invalid': submitted && $v.form.date.$error,
+                }"
               ></b-form-datepicker>
-              <!-- Error message for name -->
+              <!-- Error message for date -->
               <span
-                v-if="submitted && !$v.form.name.required"
+                v-if="submitted && !$v.form.date.required"
                 class="invalid-feedback"
               >
-                Name is required
-              </span>
-              <span
-                v-if="submitted && !$v.form.name.isString"
-                class="invalid-feedback"
-              >
-                Name can contain letters only
+                Date is required
               </span>
             </b-form-group>
           </b-col>
@@ -40,21 +37,17 @@
                 reset-button
                 locale="en"
                 placeholder="Choose a time"
+                :class="{
+                  'is-invalid': submitted && $v.form.time.$error,
+                }"
               ></b-form-timepicker>
-              <!-- Error message for email -->
-              <span v-if="submitted && errors.email" class="invalid-feedback">{{
-                errors.email[0]
-              }}</span>
+              <!-- Error message for time -->
               <span
-                v-if="submitted && !$v.form.email.required"
+                v-if="submitted && !$v.form.time.required"
                 class="invalid-feedback"
-                >Email is required</span
               >
-              <span
-                v-if="submitted && !$v.form.email.email"
-                class="invalid-feedback"
-                >Must be a valid email (example@gmail.com)</span
-              >
+                Time is required
+              </span>
             </b-form-group>
           </b-col>
         </b-row>
@@ -67,7 +60,12 @@
               label="Enrolment lecturer:"
               label-for="enrolment-lecturer"
             >
-              <b-form-select v-model="form.selectedLecturer">
+              <b-form-select
+                v-model="form.selectedLecturer"
+                :class="{
+                  'is-invalid': submitted && $v.form.selectedLecturer.$error,
+                }"
+              >
                 <b-form-select-option disabled :value="null"
                   >Please choose a lecturer</b-form-select-option
                 >
@@ -79,6 +77,13 @@
                   {{ lecturer.name }}
                 </option>
               </b-form-select>
+              <!-- Error message for lecturer -->
+              <span
+                v-if="submitted && !$v.form.selectedLecturer.required"
+                class="invalid-feedback"
+              >
+                Please choose a Lecturer
+              </span>
             </b-form-group>
           </b-col>
           <b-col>
@@ -88,7 +93,12 @@
               label="Enrolment course:"
               label-for="course"
             >
-              <b-form-select v-model="form.selectedCourse">
+              <b-form-select
+                v-model="form.selectedCourse"
+                :class="{
+                  'is-invalid': submitted && $v.form.selectedCourse.$error,
+                }"
+              >
                 <b-form-select-option disabled :value="null"
                   >Please choose a course</b-form-select-option
                 >
@@ -100,18 +110,12 @@
                   {{ course.title }}
                 </option>
               </b-form-select>
-              <!-- Error message for address -->
+              <!-- Error message for course -->
               <span
-                v-if="submitted && !$v.form.address.required"
-                class="invalid-feedback"
-                >Address is required</span
-              >
-              <span
-                v-if="submitted && !$v.form.address.maxLength"
+                v-if="submitted && !$v.form.selectedCourse.required"
                 class="invalid-feedback"
               >
-                Address cannot be more than
-                {{ $v.form.address.$params.maxLength.max }} characters.
+                Please choose a course
               </span>
             </b-form-group>
           </b-col>
@@ -124,7 +128,12 @@
               label-for="status"
             >
               <!-- Status -->
-              <b-form-select v-model="form.status">
+              <b-form-select
+                v-model="form.status"
+                :class="{
+                  'is-invalid': submitted && $v.form.status.$error,
+                }"
+              >
                 <b-form-select-option disabled :value="null"
                   >Please choose a status</b-form-select-option
                 >
@@ -133,6 +142,13 @@
                 <option value="associate">Associate</option>
                 <option value="career_break">Career Break</option>
               </b-form-select>
+              <!-- Error message for status -->
+              <span
+                v-if="submitted && !$v.form.status.required"
+                class="invalid-feedback"
+              >
+                Please choose a status
+              </span>
             </b-form-group>
           </b-col>
         </b-row>
@@ -158,8 +174,7 @@
 
 <script>
 import axios from "@/config/api";
-import { required, maxLength, email, helpers } from "vuelidate/lib/validators";
-const isPhoneNum = helpers.regex("isPhoneNum", /^[0-9_ ]*$/i);
+import { required } from "vuelidate/lib/validators";
 
 export default {
   name: "LecturersCreate",
@@ -181,13 +196,11 @@ export default {
   },
   validations: {
     form: {
-      name: { required, maxLength: maxLength(50) },
-      email: { required, email },
-      phone: { required, isPhoneNum, maxLength: maxLength(20) },
-      address: {
-        required,
-        maxLength: maxLength(100),
-      },
+      date: { required },
+      time: { required },
+      selectedLecturer: { required },
+      selectedCourse: { required },
+      status: { required },
     },
   },
 
@@ -229,10 +242,10 @@ export default {
       this.submitted = true;
 
       // stop here if form is invalid
-      //   this.$v.$touch();
-      //   if (this.$v.$invalid) {
-      //     return;
-      //   }
+      this.$v.$touch();
+      if (this.$v.$invalid) {
+        return;
+      }
       // else Post form
       axios
         .post(
@@ -263,10 +276,11 @@ export default {
     },
     onReset() {
       // Reset our form values
-      this.form.name = "";
-      this.form.phone = "";
-      this.form.email = "";
-      this.form.address = "";
+      this.form.date = null;
+      this.form.time = null;
+      this.form.selectedLecturer = null;
+      this.form.selectedCourse = null;
+      this.form.status = null;
       // Trick to reset/clear native browser form validation state
       this.show = false;
       this.$nextTick(() => {
@@ -277,5 +291,4 @@ export default {
 };
 </script>
 
-<style>
-</style>
+<style></style>

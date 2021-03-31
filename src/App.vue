@@ -22,6 +22,9 @@
         v-on:lecturerCreated="successMessage('Lecturer')"
         v-on:lecturerUpdated="infoMessage('Lecturer')"
         v-on:lecturerDeleted="deleteMessage('Lecturer')"
+        v-on:enrolmentCreated="successMessage('Enrolment')"
+        v-on:enrolmentUpdated="infoMessage('Enrolment')"
+        v-on:enrolmentDeleted="deleteMessage('Enrolment')"
       />
     </b-container>
   </div>
