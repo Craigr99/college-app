@@ -63,7 +63,9 @@
               <b-form-select
                 v-model="form.selectedLecturer"
                 :class="{
-                  'is-invalid': submitted && $v.form.selectedLecturer.$error,
+                  'is-invalid':
+                    (submitted && $v.form.selectedLecturer.$error) ||
+                    errors.lecturer,
                 }"
               >
                 <b-form-select-option disabled :value="null"
@@ -78,6 +80,12 @@
                 </option>
               </b-form-select>
               <!-- Error message for lecturer -->
+              <span
+                v-if="submitted && errors.lecturer"
+                class="invalid-feedback d-block"
+              >
+                {{ errors.lecturer[0] }}
+              </span>
               <span
                 v-if="submitted && !$v.form.selectedLecturer.required"
                 class="invalid-feedback"
@@ -96,7 +104,9 @@
               <b-form-select
                 v-model="form.selectedCourse"
                 :class="{
-                  'is-invalid': submitted && $v.form.selectedCourse.$error,
+                  'is-invalid':
+                    (submitted && $v.form.selectedCourse.$error) ||
+                    errors.course,
                 }"
               >
                 <b-form-select-option disabled :value="null"
@@ -111,6 +121,12 @@
                 </option>
               </b-form-select>
               <!-- Error message for course -->
+              <span
+                v-if="submitted && errors.course"
+                class="invalid-feedback d-block"
+              >
+                {{ errors.course[0] }}
+              </span>
               <span
                 v-if="submitted && !$v.form.selectedCourse.required"
                 class="invalid-feedback"
@@ -187,7 +203,10 @@ export default {
         selectedCourse: null,
         status: null,
       },
-      errors: {},
+      errors: {
+        lecturer: "",
+        course: "",
+      },
       show: true,
       submitted: false,
       lecturers: [],
@@ -281,16 +300,14 @@ export default {
             headers: { Authorization: "Bearer " + token },
           }
         )
-        .then((response) => {
-          console.log(response);
+        .then(() => {
           this.$emit("enrolmentUpdated");
           this.$router.push({ name: "enrolments_index" });
         })
         .catch((error) => {
-          console.log(error);
-          console.log(error.response.data);
           if (error.response.data.errors) {
-            this.errors = error.response.data.errors;
+            this.errors.lecturer = error.response.data.errors.lecturer_id;
+            this.errors.course = error.response.data.errors.course_id;
           }
         });
     },
