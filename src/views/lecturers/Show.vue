@@ -49,6 +49,72 @@
         >
       </b-card>
     </b-skeleton-wrapper>
+
+    <!-- Lecturer Enrolments -->
+    <b-card title="Lecturer Enrolments" class="mt-5">
+      <div v-if="loading" class="d-flex align-items-center mt-5">
+        <b-spinner label="Loading..." class="mx-auto"></b-spinner>
+      </div>
+      <b-table
+        v-else
+        responsive
+        striped
+        hover
+        :items="lecturer.enrolments"
+        :fields="fields"
+        head-variant="dark"
+        class="mt-3"
+      >
+        <!-- Date -->
+        <template #cell(date)="data">
+          {{ moment(data.item.date).format("DD-MM-YYYY") }}
+        </template>
+        <!-- Time -->
+        <template #cell(time)="data">
+          {{ moment(data.item.time, "HH:mm:ss").format("HH:mm A") }}
+        </template>
+        <!-- status -->
+        <template #cell(status)="data">
+          <router-link
+            :to="{ name: 'enrolments_show', params: { id: data.item.id } }"
+          >
+            {{ data.item.status === "career_break" ? "Career Break" : "" }}
+            {{ data.item.status === "assigned" ? "Assigned" : "" }}
+            {{ data.item.status === "associate" ? "Associate" : "" }}
+            {{ data.item.status === "interested" ? "Interested" : "" }}
+          </router-link>
+        </template>
+        <template #cell(course)="data">
+          <router-link
+            :to="{
+              name: 'courses_show',
+              params: { id: data.item.course.id },
+            }"
+          >
+            {{ data.item.course.title }}
+          </router-link>
+        </template>
+        <template #cell(actions)="data">
+          <router-link
+            :to="{ name: 'enrolments_show', params: { id: data.item.id } }"
+          >
+            <b-button size="sm" variant="outline-primary"
+              ><b-icon-eye
+            /></b-button>
+          </router-link>
+          <router-link
+            :to="{ name: 'enrolments_edit', params: { id: data.item.id } }"
+          >
+            <b-button
+              size="sm"
+              variant="outline-primary"
+              class="mx-lg-2 my-2 my-lg-0"
+              ><b-icon-pen
+            /></b-button>
+          </router-link>
+        </template>
+      </b-table>
+    </b-card>
   </div>
 </template>
 
@@ -61,6 +127,26 @@ export default {
     return {
       lecturer: [],
       loading: true,
+      fields: [
+        {
+          key: "date",
+          sortable: true,
+        },
+        {
+          key: "time",
+          sortable: true,
+        },
+        {
+          key: "status",
+          sortable: true,
+        },
+        {
+          key: "course",
+          label: "Course",
+          sortable: true,
+        },
+        "Actions",
+      ],
     };
   },
   mounted() {

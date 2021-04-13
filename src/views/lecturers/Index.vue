@@ -172,6 +172,14 @@ export default {
         if (lecturer.email.toLowerCase().includes(this.term.toLowerCase())) {
           return true;
         }
+        // Check lecturer address
+        if (lecturer.address.toLowerCase().includes(this.term.toLowerCase())) {
+          return true;
+        }
+        // Check lecturer phone
+        if (lecturer.phone.toLowerCase().includes(this.term.toLowerCase())) {
+          return true;
+        }
       });
     },
     deleteLecturer(id) {

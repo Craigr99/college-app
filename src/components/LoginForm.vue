@@ -1,83 +1,100 @@
 <template>
   <div>
-    <b-card title="Login to your account">
-      <b-form
-        @submit.prevent="login()"
-        @reset="onReset()"
-        v-if="show"
-        novalidate
-      >
-        <!-- Email -->
-        <b-form-group
-          id="input-group-1"
-          label="Email address:"
-          label-for="input-1"
-          description="We'll never share your email with anyone else."
-        >
-          <b-form-input
-            id="email"
-            v-model="form.email"
-            type="email"
-            placeholder="Enter email"
-            required
-            :class="{
-              'is-invalid':
-                (submitted && $v.form.email.$error) ||
-                errors.email ||
-                errors[0],
-            }"
-          ></b-form-input>
-          <!-- Error message for email -->
-          <span v-if="submitted && errors[0]" class="invalid-feedback">{{
-            errors
-          }}</span>
-          <span v-if="submitted && errors.email" class="invalid-feedback">{{
-            errors.email[0]
-          }}</span>
-          <span
-            v-if="submitted && !$v.form.email.required"
-            class="invalid-feedback"
-            >Email is required</span
+    <b-row class="justify-content-md-center">
+      <b-col md="8">
+        <b-card title="Login to your account">
+          <b-form
+            @submit.prevent="login()"
+            @reset="onReset()"
+            v-if="show"
+            novalidate
           >
-          <span
-            v-if="submitted && !$v.form.email.email"
-            class="invalid-feedback"
-            >Must be a valid email (example@gmail.com)</span
-          >
-        </b-form-group>
+            <!-- Email -->
+            <b-form-group
+              id="input-group-1"
+              label="Email address:"
+              label-for="input-1"
+              description="We'll never share your email with anyone else."
+            >
+              <b-form-input
+                id="email"
+                v-model="form.email"
+                type="email"
+                placeholder="Enter email"
+                required
+                :class="{
+                  'is-invalid':
+                    (submitted && $v.form.email.$error) ||
+                    errors.email ||
+                    errors[0],
+                }"
+              ></b-form-input>
+              <!-- Error message for email -->
+              <span v-if="submitted && errors[0]" class="invalid-feedback">{{
+                errors
+              }}</span>
+              <span v-if="submitted && errors.email" class="invalid-feedback">{{
+                errors.email[0]
+              }}</span>
+              <span
+                v-if="submitted && !$v.form.email.required"
+                class="invalid-feedback"
+                >Email is required</span
+              >
+              <span
+                v-if="submitted && !$v.form.email.email"
+                class="invalid-feedback"
+                >Must be a valid email (example@gmail.com)</span
+              >
+            </b-form-group>
 
-        <!-- Password -->
-        <b-form-group id="password" label="Your Password:" label-for="password">
-          <b-form-input
-            id="password"
-            type="password"
-            v-model="form.password"
-            placeholder="Enter password"
-            required
-            :class="{
-              'is-invalid': submitted && $v.form.password.$error,
-            }"
-          ></b-form-input>
-          <!-- Error messages for password -->
-          <span
-            v-if="submitted && !$v.form.password.required"
-            class="invalid-feedback"
-            >Password is required</span
-          >
-          <span
-            v-if="submitted && !$v.form.password.minLength"
-            class="invalid-feedback"
-            >Password must be
-            {{ $v.form.password.$params.minLength.min }} characters.
-          </span>
-        </b-form-group>
+            <!-- Password -->
+            <b-form-group
+              id="password"
+              label="Your Password:"
+              label-for="password"
+            >
+              <b-form-input
+                id="password"
+                type="password"
+                v-model="form.password"
+                placeholder="Enter password"
+                required
+                :class="{
+                  'is-invalid': submitted && $v.form.password.$error,
+                }"
+              ></b-form-input>
+              <!-- Error messages for password -->
+              <span
+                v-if="submitted && !$v.form.password.required"
+                class="invalid-feedback"
+                >Password is required</span
+              >
+              <span
+                v-if="submitted && !$v.form.password.minLength"
+                class="invalid-feedback"
+                >Password must be
+                {{ $v.form.password.$params.minLength.min }} characters.
+              </span>
+            </b-form-group>
 
-        <b-button type="submit" variant="primary" class="mr-2">Login</b-button>
-        <b-button type="reset" variant="danger" @click="$v.$reset"
-          >Reset</b-button
-        >
-      </b-form>
-    </b-card>
+            <b-form-group>
+              <span>
+                Don't have an account?
+                <router-link :to="{ name: 'register' }"> Register</router-link>
+              </span>
+            </b-form-group>
+
+            <b-button type="submit" variant="primary" class="mr-2"
+              >Login</b-button
+            >
+            <b-button type="reset" variant="danger" @click="$v.$reset"
+              >Reset</b-button
+            >
+          </b-form>
+        </b-card>
+      </b-col>
+    </b-row>
   </div>
 </template>
 
