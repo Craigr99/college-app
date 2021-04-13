@@ -19,18 +19,50 @@
         </b-card>
       </template>
 
-      <b-card>
-        <b-card-text>
-          <h2>Date: {{ enrolment.date }}</h2>
-          <h2>Status: {{ enrolment.status }}</h2>
-          <h2>Lecturer: {{ enrolment.lecturer.name }}</h2>
-          <!-- {{ enrolment.lecturer.name }} -->
+      <b-card
+        title="Enrolment"
+        :sub-title="
+          moment(enrolment.date).format('DD-MM-YYYY') +
+          ' : ' +
+          moment(enrolment.time, 'HH:mm:ss').format('HH:mm A')
+        "
+      >
+        <b-card-text class="mt-3">
+          <span class="d-flex align-items-baseline">
+            <h5 class="mr-2">Lecturer:</h5>
+            <router-link
+              :to="{
+                name: 'lecturers_show',
+                params: { id: enrolment.lecturer_id },
+              }"
+            >
+              {{ enrolment.lecturer.name }}
+            </router-link>
+          </span>
+          <span class="d-flex align-items-baseline my-3">
+            <h5 class="mr-2">Course:</h5>
+            <router-link
+              :to="{
+                name: 'courses_show',
+                params: { id: enrolment.course_id },
+              }"
+            >
+              {{ enrolment.course.title }}
+            </router-link>
+          </span>
+          <span class="d-flex align-items-baseline">
+            <h5 class="mr-2">Status:</h5>
+            {{ enrolment.status === "career_break" ? "Career Break" : "" }}
+            {{ enrolment.status === "assigned" ? "Assigned" : "" }}
+            {{ enrolment.status === "associate" ? "Associate" : "" }}
+            {{ enrolment.status === "interested" ? "Interested" : "" }}
+          </span>
         </b-card-text>
 
         <!-- Buttons -->
-        <!-- <b-button href="#" variant="secondary">
+        <b-button href="#" variant="secondary">
           <router-link
-            :to="{ name: 'lecturers_index' }"
+            :to="{ name: 'enrolments_index' }"
             class="flex align-items-center text-white"
           >
             <b-icon-arrow-left></b-icon-arrow-left>
@@ -40,15 +72,15 @@
 
         <b-button href="#" variant="primary" class="mx-2">
           <router-link
-            :to="{ name: 'lecturers_edit', params: { id: lecturer.id } }"
+            :to="{ name: 'enrolments_edit', params: { id: enrolment.id } }"
             class="text-white"
           >
             Edit
           </router-link>
         </b-button>
-        <b-button href="#" variant="danger" @click="deleteLecturer()"
+        <b-button href="#" variant="danger" @click="deleteEnrolment()"
           >Delete</b-button
-        > -->
+        >
       </b-card>
     </b-skeleton-wrapper>
   </div>
@@ -61,8 +93,8 @@ export default {
   name: "EnrolmentShow",
   data() {
     return {
-      enrolment: [],
       loading: true,
+      enrolment: [],
     };
   },
   mounted() {
@@ -88,103 +120,51 @@ export default {
         });
     },
     deleteEnrolment() {
-      if (this.lecturer.enrolments.length > 0) {
-        //If course has enrolments
-        this.$bvModal
-          .msgBoxConfirm(
-            "Please confirm that you want to delete the lecturer. WARNING: the enrolments for this lecturer will also be deleted!",
-            {
-              title: "Please Confirm",
-              okVariant: "danger",
-              okTitle: "DELETE",
-              headerBgVariant: "dark",
-              headerTextVariant: "light",
-              cancelTitle: "BACK",
-              footerClass: "p-2",
-              hideHeaderClose: false,
-              centered: true,
-            }
-          )
-          .then((value) => {
-            if (value === true) {
-              //DELETE
-              let token = localStorage.getItem("token");
-              let id = this.$route.params.id;
-
-              // loop through enrolments and send delete request to delete them
-              this.lecturer.enrolments.forEach((enrolment) => {
-                axios
-                  .delete("/enrolments/" + enrolment.id, {
-                    headers: { Authorization: "Bearer " + token },
-                  })
-                  .catch(function (error) {
-                    console.log(error);
-                  });
+      this.$bvModal
+        .msgBoxConfirm(
+          "Please confirm that you want to delete the enrolment.",
+          {
+            title: "Please Confirm",
+            okVariant: "danger",
+            okTitle: "DELETE",
+            headerBgVariant: "dark",
+            headerTextVariant: "light",
+            cancelTitle: "BACK",
+            footerClass: "p-2",
+            hideHeaderClose: false,
+            centered: true,
+          }
+        )
+        .then((value) => {
+          if (value === true) {
+            //DELETE
+            let token = localStorage.getItem("token");
+            let id = this.enrolment.id;
+            axios
+              .delete(`/enrolments/${id}`, {
+                headers: { Authorization: "Bearer " + token },
+              })
+              .then(() => {
+                this.$emit("enrolmentDeleted");
+                this.$router.replace({ name: "enrolments_index" });
+              })
+              .catch((error) => {
+                console.log(error);
+                console.log(error.response.data);
               });
-
-              axios
-                .delete(`/lecturers/${id}`, {
-                  headers: { Authorization: "Bearer " + token },
-                })
-                .then(() => {
-                  this.$emit("lecturerDeleted");
-                  this.$router.replace({ name: "lecturers_index" });
-                })
-                .catch((error) => {
-                  console.log(error);
-                  console.log(error.response.data);
-                });
-            }
-          })
-          .catch((err) => {
-            // An error occurred
-            console.log(err);
-          });
-      } else {
-        // Course has no enrolments
-        this.$bvModal
-          .msgBoxConfirm(
-            "Please confirm that you want to delete the lecturer.",
-            {
-              title: "Please Confirm",
-              okVariant: "danger",
-              okTitle: "DELETE",
-              headerBgVariant: "dark",
-              headerTextVariant: "light",
-              cancelTitle: "BACK",
-              footerClass: "p-2",
-              hideHeaderClose: false,
-              centered: true,
-            }
-          )
-          .then((value) => {
-            if (value === true) {
-              //DELETE
-              let token = localStorage.getItem("token");
-              let id = this.$route.params.id;
-              axios
-                .delete(`/lecturers/${id}`, {
-                  headers: { Authorization: "Bearer " + token },
-                })
-                .then(() => {
-                  this.$emit("lecturerDeleted");
-                  this.$router.replace({ name: "lecturers_index" });
-                })
-                .catch((error) => {
-                  console.log(error);
-                  console.log(error.response.data);
-                });
-            }
-          })
-          .catch((err) => {
-            // An error occurred
-            console.log(err);
-          });
-      }
+          }
+        })
+        .catch((err) => {
+          // An error occurred
+          console.log(err);
+        });
     },
   },
 };
 </script>
 
 <style>
+h5 {
+  margin-bottom: 0;
+}
 </style>
