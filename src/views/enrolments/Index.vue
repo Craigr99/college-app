@@ -53,11 +53,23 @@
       :fields="fields"
       head-variant="dark"
     >
+      <!-- Date -->
+      <template #cell(date)="data">
+        {{ moment(data.item.date).format("DD-MM-YYYY") }}
+      </template>
+      <!-- Time -->
+      <template #cell(time)="data">
+        {{ moment(data.item.time, "HH:mm:ss").format("HH:mm A") }}
+      </template>
+      <!-- status -->
       <template #cell(status)="data">
         <router-link
           :to="{ name: 'enrolments_show', params: { id: data.item.id } }"
         >
-          {{ data.item.status }}
+          {{ data.item.status === "career_break" ? "Career Break" : "" }}
+          {{ data.item.status === "assigned" ? "Assigned" : "" }}
+          {{ data.item.status === "associate" ? "Associate" : "" }}
+          {{ data.item.status === "interested" ? "Interested" : "" }}
         </router-link>
       </template>
       <template #cell(lecturer)="data">

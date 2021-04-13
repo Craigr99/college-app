@@ -50,6 +50,66 @@
         >
       </b-card>
     </b-skeleton-wrapper>
+
+    <!-- Course Enrolments -->
+    <b-card title="Course Enrolments" class="mt-5">
+      <div v-if="loading" class="d-flex align-items-center mt-5">
+        <b-spinner label="Loading..." class="mx-auto"></b-spinner>
+      </div>
+      <b-table
+        v-else
+        responsive
+        striped
+        hover
+        :items="course.enrolments"
+        :fields="fields"
+        head-variant="dark"
+        class="mt-3"
+      >
+        <template #cell(status)="data">
+          <router-link
+            :to="{ name: 'enrolments_show', params: { id: data.item.id } }"
+          >
+            {{ data.item.status }}
+          </router-link>
+        </template>
+        <template #cell(lecturer)="data">
+          <router-link
+            :to="{
+              name: 'lecturers_show',
+              params: { id: data.item.lecturer.id },
+            }"
+          >
+            {{ data.item.lecturer.name }}
+          </router-link>
+        </template>
+        <template #cell(actions)="data">
+          <router-link
+            :to="{ name: 'enrolments_show', params: { id: data.item.id } }"
+          >
+            <b-button size="sm" variant="outline-primary"
+              ><b-icon-eye
+            /></b-button>
+          </router-link>
+          <router-link
+            :to="{ name: 'enrolments_edit', params: { id: data.item.id } }"
+          >
+            <b-button
+              size="sm"
+              variant="outline-primary"
+              class="mx-lg-2 my-2 my-lg-0"
+              ><b-icon-pen
+            /></b-button>
+          </router-link>
+          <b-button
+            size="sm"
+            variant="outline-danger"
+            @click="deleteEnrolment(data.item.id)"
+            ><b-icon-trash
+          /></b-button>
+        </template>
+      </b-table>
+    </b-card>
   </div>
 </template>
 
@@ -62,6 +122,26 @@ export default {
     return {
       course: [],
       loading: true,
+      fields: [
+        {
+          key: "date",
+          sortable: true,
+        },
+        {
+          key: "time",
+          sortable: true,
+        },
+        {
+          key: "status",
+          sortable: true,
+        },
+        {
+          key: "lecturer",
+          label: "Lecturer",
+          sortable: true,
+        },
+        "Actions",
+      ],
     };
   },
   mounted() {
@@ -178,6 +258,61 @@ export default {
             console.log(err);
           });
       }
+    },
+    getEnrolment(id) {
+      let token = localStorage.getItem("token");
+
+      axios
+        .get(`/enrolments/${id}`, {
+          headers: { Authorization: "Bearer " + token },
+        })
+        .then((response) => {
+          this.course = response.data.data;
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
+    deleteEnrolment(id) {
+      this.getEnrolment(id);
+      console.log("here");
+
+      // this.$bvModal
+      //   .msgBoxConfirm(
+      //     "Please confirm that you want to delete the enrolment.",
+      //     {
+      //       title: "Please Confirm",
+      //       okVariant: "danger",
+      //       okTitle: "DELETE",
+      //       headerBgVariant: "dark",
+      //       headerTextVariant: "light",
+      //       cancelTitle: "BACK",
+      //       footerClass: "p-2",
+      //       hideHeaderClose: false,
+      //       centered: true,
+      //     }
+      //   )
+      //   .then((value) => {
+      //     if (value === true) {
+      //       //DELETE
+      //       let token = localStorage.getItem("token");
+      //       axios
+      //         .delete(`/enrolments/${id}`, {
+      //           headers: { Authorization: "Bearer " + token },
+      //         })
+      //         .then(() => {
+      //           this.$emit("enrolmentDeleted");
+      //           this.getEnrolments();
+      //         })
+      //         .catch((error) => {
+      //           console.log(error);
+      //         });
+      //     }
+      //   })
+      //   .catch((err) => {
+      //     // An error occurred
+      //     console.log(err);
+      //   });
     },
   },
 };

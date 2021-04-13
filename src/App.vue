@@ -73,7 +73,7 @@ export default {
     },
     setLoggedOut() {
       this.loggedIn = false;
-      this.flash("Logged out Successfully!", "error", {
+      this.flash("Logged out Successfully!", "success", {
         timeout: 3000,
       });
     },
