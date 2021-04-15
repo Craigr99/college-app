@@ -74,7 +74,7 @@
           <b-button
             size="sm"
             variant="outline-primary"
-            class="mx-md-2 my-2 my-md-0"
+            class="mx-lg-2 my-2 my-lg-0"
             ><b-icon-pen
           /></b-button>
         </router-link>

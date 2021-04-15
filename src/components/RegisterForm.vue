@@ -83,6 +83,7 @@
                   id="password"
                   label="Your Password:"
                   label-for="password"
+                  description="Password must be 6 characters long."
                 >
                   <b-form-input
                     id="password"

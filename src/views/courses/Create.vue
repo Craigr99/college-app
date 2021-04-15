@@ -80,7 +80,10 @@
                 type="text"
                 placeholder="Enter points"
                 required
-                :class="{ 'is-invalid': submitted && $v.form.points.$error }"
+                :class="{
+                  'is-invalid':
+                    (submitted && $v.form.points.$error) || errors.points,
+                }"
               ></b-form-input>
               <!-- Error message for points -->
               <span
@@ -95,6 +98,11 @@
                 {{ $v.form.points.$params.between.min }} and
                 {{ $v.form.points.$params.between.max }}</span
               >
+              <span
+                v-if="submitted && errors.points"
+                class="invalid-feedback"
+                >{{ errors.points[0] }}</span
+              >
             </b-form-group>
           </b-col>
           <b-col>
@@ -106,9 +114,12 @@
                 type="text"
                 placeholder="Enter level"
                 required
-                :class="{ 'is-invalid': submitted && $v.form.level.$error }"
+                :class="{
+                  'is-invalid':
+                    (submitted && $v.form.level.$error) || errors.level,
+                }"
               ></b-form-input>
-              <!-- Error message for points -->
+              <!-- Error message for level -->
               <span
                 v-if="submitted && !$v.form.level.required"
                 class="invalid-feedback"
@@ -121,6 +132,9 @@
                 {{ $v.form.level.$params.between.min }} and
                 {{ $v.form.level.$params.between.max }}</span
               >
+              <span v-if="submitted && errors.level" class="invalid-feedback">{{
+                errors.level[0]
+              }}</span>
             </b-form-group>
           </b-col>
         </b-row>

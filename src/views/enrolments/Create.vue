@@ -226,6 +226,7 @@ export default {
   mounted() {
     this.getLecturers();
     this.getCourses();
+    this.checkIfData();
   },
   methods: {
     getLecturers() {
@@ -255,6 +256,17 @@ export default {
         .catch((error) => {
           console.log(error);
         });
+    },
+    checkIfData() {
+      let data = this.$route.params.data;
+
+      if (data) {
+        if (data.lecturerId) {
+          this.form.selectedLecturer = data.lecturerId;
+        } else if (data.courseId) {
+          this.form.selectedCourse = data.courseId;
+        }
+      }
     },
     createEnrolment() {
       let token = localStorage.getItem("token");
