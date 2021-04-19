@@ -19,7 +19,14 @@
         </b-card>
       </template>
 
-      <b-card :title="course.title" :sub-title="course.code">
+      <b-card
+        header="Course"
+        header-text-variant="white"
+        header-tag="header"
+        header-bg-variant="dark"
+        :title="course.title"
+        :sub-title="course.code"
+      >
         <b-card-text>
           {{ course.description }}
         </b-card-text>
@@ -119,7 +126,7 @@
             >
               <b-button
                 size="sm"
-                variant="outline-primary"
+                variant="outline-secondary"
                 class="mx-lg-2 my-2 my-lg-0"
                 ><b-icon-pen
               /></b-button>

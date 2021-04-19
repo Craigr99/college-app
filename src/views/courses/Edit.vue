@@ -1,7 +1,12 @@
 <template>
   <div>
-    <b-card>
-      <h2 class="pt-3 pb-4">Edit course</h2>
+    <b-card
+      header="Edit a course"
+      header-text-variant="white"
+      header-tag="header"
+      header-bg-variant="dark"
+      header-class="h4 "
+    >
       <b-form @submit.prevent="updateCourse()" @reset="onReset()" novalidate>
         <b-row cols="1" cols-md="2">
           <b-col>
@@ -176,7 +181,7 @@
             <span class="ml-1"> back</span>
           </router-link>
         </b-button>
-        <b-button type="submit" variant="primary" class="mx-2">Submit</b-button>
+        <b-button type="submit" variant="primary" class="mx-2">Update</b-button>
         <b-button type="reset" variant="danger" @click="$v.$reset"
           >Reset</b-button
         >

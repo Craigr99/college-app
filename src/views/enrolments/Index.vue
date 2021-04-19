@@ -102,7 +102,7 @@
         >
           <b-button
             size="sm"
-            variant="outline-primary"
+            variant="outline-secondary"
             class="mx-lg-2 my-2 my-lg-0"
             ><b-icon-pen
           /></b-button>

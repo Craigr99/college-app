@@ -19,7 +19,14 @@
         </b-card>
       </template>
 
-      <b-card :title="lecturer.name" :sub-title="lecturer.email">
+      <b-card
+        header="Lecturer"
+        header-text-variant="white"
+        header-tag="header"
+        header-bg-variant="dark"
+        :title="lecturer.name"
+        :sub-title="lecturer.email"
+      >
         <b-card-text>
           {{ lecturer.address }} <br />
           {{ lecturer.phone }}
@@ -119,7 +126,7 @@
             >
               <b-button
                 size="sm"
-                variant="outline-primary"
+                variant="outline-secondary"
                 class="mx-lg-2 my-2 my-lg-0"
                 ><b-icon-pen
               /></b-button>

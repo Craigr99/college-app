@@ -20,7 +20,10 @@
       </template>
 
       <b-card
-        title="Enrolment"
+        header="Enrolment"
+        header-text-variant="white"
+        header-tag="header"
+        header-bg-variant="dark"
         :sub-title="
           moment(enrolment.date).format('DD-MM-YYYY') +
           ' : ' +

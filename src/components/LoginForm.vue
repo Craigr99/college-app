@@ -88,7 +88,7 @@
             <b-button type="submit" variant="primary" class="mr-2"
               >Login</b-button
             >
-            <b-button type="reset" variant="danger" @click="$v.$reset"
+            <b-button type="reset" variant="secondary" @click="$v.$reset"
               >Reset</b-button
             >
           </b-form>

@@ -1,7 +1,12 @@
 <template>
   <div>
-    <b-card>
-      <h2 class="pt-3 pb-4">Add a new lecturer</h2>
+    <b-card
+      header="Add a new lecturer"
+      header-text-variant="white"
+      header-tag="header"
+      header-bg-variant="dark"
+      header-class="h4"
+    >
       <b-form @submit.prevent="createLecturer()" @reset="onReset()" novalidate>
         <b-row cols="1" cols-md="2">
           <b-col>
