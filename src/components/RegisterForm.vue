@@ -2,7 +2,13 @@
   <div>
     <b-row class="justify-content-md-center">
       <b-col md="8">
-        <b-card title="Create an Account">
+        <b-card
+          header="Create an account"
+          header-text-variant="white"
+          header-tag="header"
+          header-bg-variant="dark"
+          header-class="h4 font-weight-normal"
+        >
           <b-form
             @submit.prevent="register()"
             @reset="onReset()"
