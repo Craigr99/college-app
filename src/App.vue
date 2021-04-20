@@ -11,6 +11,7 @@
       <!-- Flash message  -->
       <flash-message transitionIn="animated swing" class="flash-message" />
 
+      <!-- Views -->
       <router-view
         :loggedIn="this.loggedIn"
         v-on:login="setLoggedIn"
@@ -33,7 +34,6 @@
 <script>
 import axios from "@/config/api";
 import Navbar from "./components/Navbar";
-import FlashMessage from "./components/FlashMessage.vue";
 require("vue-flash-message/dist/vue-flash-message.min.css");
 
 export default {
@@ -42,12 +42,12 @@ export default {
     Navbar,
   },
   created() {
-    FlashMessage;
     this.checkIfLogged();
   },
   data() {
     return {
       loggedIn: false,
+      token: "",
 
       user: {
         name: "",

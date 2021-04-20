@@ -184,96 +184,109 @@ export default {
     },
     deleteLecturer(id) {
       this.getLecturer(id);
+      // wait until getLecturer finishes
+      setTimeout(() => {
+        if (this.lecturer && this.lecturer.enrolments.length) {
+          //If course has enrolments
+          this.$bvModal
+            .msgBoxConfirm(
+              "Please confirm that you want to delete the lecturer. WARNING: the enrolments for this lecturer will also be deleted!",
+              {
+                title: "Please Confirm",
+                okVariant: "danger",
+                okTitle: "DELETE",
+                headerBgVariant: "dark",
+                headerTextVariant: "light",
+                cancelTitle: "BACK",
+                footerClass: "p-2",
+                hideHeaderClose: false,
+                centered: true,
+              }
+            )
+            .then((value) => {
+              if (value === true) {
+                //DELETE
+                let token = localStorage.getItem("token");
 
-      if (this.lecturer.enrolments.length > 0) {
-        //If course has enrolments
-        this.$bvModal
-          .msgBoxConfirm(
-            "Please confirm that you want to delete the lecturer. WARNING: the enrolments for this lecturer will also be deleted!",
-            {
-              title: "Please Confirm",
-              okVariant: "danger",
-              okTitle: "DELETE",
-              headerBgVariant: "dark",
-              headerTextVariant: "light",
-              cancelTitle: "BACK",
-              footerClass: "p-2",
-              hideHeaderClose: false,
-              centered: true,
-            }
-          )
-          .then((value) => {
-            if (value === true) {
-              //DELETE
-              let token = localStorage.getItem("token");
+                let listOfDeleteRequests = this.lecturer.enrolments.map(
+                  (current) =>
+                    axios.delete("/enrolments/" + current.id, {
+                      headers: { Authorization: "Bearer " + token },
+                    })
+                );
+                // log the contents of listOfDeleteRequests
+                Promise.all(listOfDeleteRequests).then(() => {
+                  axios
+                    .delete("/lecturers/" + id, {
+                      headers: { Authorization: "Bearer " + token },
+                    })
+                    .then(() => {
+                      // do something
+                      this.$emit("lecturerDeleted");
+                      this.getLecturers();
+                    })
+                    .catch((error) => {
+                      console.log(error);
+                    });
+                });
 
-              // loop through enrolments and send delete request to delete them
-              this.lecturer.enrolments.forEach((enrolment) => {
+                // axios
+                //   .delete(`/lecturers/${id}`, {
+                //     headers: { Authorization: "Bearer " + token },
+                //   })
+                //   .then(() => {
+                //     this.$emit("lecturerDeleted");
+                //     this.getLecturers();
+                //   })
+                //   .catch((error) => {
+                //     console.log(error);
+                //   });
+              }
+            })
+            .catch((err) => {
+              // An error occurred
+              console.log(err);
+            });
+        } else {
+          // Course has no enrolments
+          this.$bvModal
+            .msgBoxConfirm(
+              "Please confirm that you want to delete the lecturer.",
+              {
+                title: "Please Confirm",
+                okVariant: "danger",
+                okTitle: "DELETE",
+                headerBgVariant: "dark",
+                headerTextVariant: "light",
+                cancelTitle: "BACK",
+                footerClass: "p-2",
+                hideHeaderClose: false,
+                centered: true,
+              }
+            )
+            .then((value) => {
+              if (value === true) {
+                //DELETE
+                let token = localStorage.getItem("token");
                 axios
-                  .delete("/enrolments/" + enrolment.id, {
+                  .delete(`/lecturers/${id}`, {
                     headers: { Authorization: "Bearer " + token },
                   })
-                  .catch(function (error) {
+                  .then(() => {
+                    this.$emit("lecturerDeleted");
+                    this.getLecturers();
+                  })
+                  .catch((error) => {
                     console.log(error);
                   });
-              });
-
-              axios
-                .delete(`/lecturers/${id}`, {
-                  headers: { Authorization: "Bearer " + token },
-                })
-                .then(() => {
-                  this.$emit("lecturerDeleted");
-                  this.getLecturers();
-                })
-                .catch((error) => {
-                  console.log(error);
-                });
-            }
-          })
-          .catch((err) => {
-            // An error occurred
-            console.log(err);
-          });
-      } else {
-        // Course has no enrolments
-        this.$bvModal
-          .msgBoxConfirm(
-            "Please confirm that you want to delete the lecturer.",
-            {
-              title: "Please Confirm",
-              okVariant: "danger",
-              okTitle: "DELETE",
-              headerBgVariant: "dark",
-              headerTextVariant: "light",
-              cancelTitle: "BACK",
-              footerClass: "p-2",
-              hideHeaderClose: false,
-              centered: true,
-            }
-          )
-          .then((value) => {
-            if (value === true) {
-              //DELETE
-              let token = localStorage.getItem("token");
-              axios
-                .delete(`/lecturers/${id}`, {
-                  headers: { Authorization: "Bearer " + token },
-                })
-                .then(() => {
-                  this.$emit("lecturerDeleted");
-                  this.getLecturers();
-                })
-                .catch((error) => {
-                  console.log(error);
-                });
-            }
-          })
-          .catch((err) => {
-            // An error occurred
-            console.log(err);
-          });
-      }
+              }
+            })
+            .catch((err) => {
+              // An error occurred
+              console.log(err);
+            });
+        }
+      }, 500);
     },
   },
 };

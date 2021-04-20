@@ -201,7 +201,7 @@ export default {
       });
     },
     deleteCourse() {
-      if (this.course.enrolments.length > 0) {
+      if (this.course.enrolments.length) {
         //If course has enrolments
         this.$bvModal
           .msgBoxConfirm(
@@ -224,30 +224,39 @@ export default {
               let token = localStorage.getItem("token");
               let id = this.$route.params.id;
 
-              // loop through enrolments and send delete request to delete them
-              this.course.enrolments.forEach((enrolment) => {
-                console.log(enrolment.id);
+              let listOfDeleteRequests = this.course.enrolments.map((current) =>
+                axios.delete("/enrolments/" + current.id, {
+                  headers: { Authorization: "Bearer " + token },
+                })
+              );
+              // log the contents of listOfDeleteRequests
+              Promise.all(listOfDeleteRequests).then(() => {
                 axios
-                  .delete("/enrolments/" + enrolment.id, {
+                  .delete("/courses/" + id, {
                     headers: { Authorization: "Bearer " + token },
                   })
-                  .catch(function (error) {
+                  .then(() => {
+                    // do something
+                    this.$emit("courseDeleted");
+                    this.$router.replace({ name: "courses_index" });
+                  })
+                  .catch((error) => {
                     console.log(error);
                   });
               });
 
-              axios
-                .delete(`/courses/${id}`, {
-                  headers: { Authorization: "Bearer " + token },
-                })
-                .then(() => {
-                  this.$emit("courseDeleted");
-                  this.$router.replace({ name: "courses_index" });
-                })
-                .catch((error) => {
-                  console.log(error);
-                  console.log(error.response.data);
-                });
+              // axios
+              //   .delete(`/courses/${id}`, {
+              //     headers: { Authorization: "Bearer " + token },
+              //   })
+              //   .then(() => {
+              //     this.$emit("courseDeleted");
+              //     this.$router.replace({ name: "courses_index" });
+              //   })
+              //   .catch((error) => {
+              //     console.log(error);
+              //     console.log(error.response.data);
+              //   });
             }
           })
           .catch((err) => {

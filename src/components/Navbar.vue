@@ -9,6 +9,7 @@
         <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
 
         <b-collapse id="nav-collapse" is-nav>
+          <!-- If user is logged in -->
           <b-navbar-nav v-if="loggedIn">
             <b-nav-item>
               <router-link :to="{ name: 'courses_index' }" class="text-white"
@@ -28,6 +29,7 @@
           </b-navbar-nav>
 
           <!-- Right aligned nav items -->
+          <!-- If user is not logged in  -->
           <b-navbar-nav class="ml-auto">
             <b-nav-item v-if="!loggedIn">
               <router-link to="/login" class="text-white">Login</router-link>
@@ -77,7 +79,6 @@ export default {
         })
         .then((response) => {
           console.log(response.data);
-          console.log("Logged out");
           this.$emit("logout");
           this.$router.push({ name: "login" });
         })
@@ -86,6 +87,7 @@ export default {
           console.log(error.response.data);
         });
 
+      // Remove token
       localStorage.removeItem("token");
     },
   },

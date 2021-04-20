@@ -158,7 +158,6 @@ export default {
         });
     },
     onReset() {
-      // e.preventDefault();
       // Reset our form values
       this.form.email = "";
       this.form.password = "";

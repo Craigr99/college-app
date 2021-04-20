@@ -202,7 +202,7 @@ export default {
     },
 
     deleteLecturer() {
-      if (this.lecturer.enrolments.length > 0) {
+      if (this.lecturer.enrolments.length) {
         //If course has enrolments
         this.$bvModal
           .msgBoxConfirm(
@@ -225,29 +225,27 @@ export default {
               let token = localStorage.getItem("token");
               let id = this.$route.params.id;
 
-              // loop through enrolments and send delete request to delete them
-              this.lecturer.enrolments.forEach((enrolment) => {
-                axios
-                  .delete("/enrolments/" + enrolment.id, {
+              let listOfDeleteRequests = this.lecturer.enrolments.map(
+                (current) =>
+                  axios.delete("/enrolments/" + current.id, {
                     headers: { Authorization: "Bearer " + token },
                   })
-                  .catch(function (error) {
+              );
+              // log the contents of listOfDeleteRequests
+              Promise.all(listOfDeleteRequests).then(() => {
+                axios
+                  .delete("/lecturers/" + id, {
+                    headers: { Authorization: "Bearer " + token },
+                  })
+                  .then(() => {
+                    // do something
+                    this.$emit("lecturerDeleted");
+                    this.$router.replace({ name: "lecturers_index" });
+                  })
+                  .catch((error) => {
                     console.log(error);
                   });
               });
-
-              axios
-                .delete(`/lecturers/${id}`, {
-                  headers: { Authorization: "Bearer " + token },
-                })
-                .then(() => {
-                  this.$emit("lecturerDeleted");
-                  this.$router.replace({ name: "lecturers_index" });
-                })
-                .catch((error) => {
-                  console.log(error);
-                  console.log(error.response.data);
-                });
             }
           })
           .catch((err) => {

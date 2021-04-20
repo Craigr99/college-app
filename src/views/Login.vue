@@ -12,6 +12,7 @@ export default {
   components: { LoginForm },
   methods: {
     loggingIn() {
+      // Emit event to App.vue
       this.$emit("login");
     },
   },

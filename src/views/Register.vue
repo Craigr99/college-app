@@ -12,6 +12,7 @@ export default {
   components: { RegisterForm },
   methods: {
     registeringUser() {
+      // Emit event to App.vue
       this.$emit("register");
     },
   },

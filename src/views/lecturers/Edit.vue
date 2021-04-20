@@ -158,7 +158,7 @@
 <script>
 import axios from "@/config/api";
 import { required, maxLength, email, helpers } from "vuelidate/lib/validators";
-const isPhoneNum = helpers.regex("isPhoneNum", /^[0-9_ ]*$/i);
+const isPhoneNum = helpers.regex("isPhoneNum", /^(?=.*[0-9])[-0-9]+$/);
 
 export default {
   name: "LecturersCreate",

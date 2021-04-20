@@ -177,95 +177,111 @@ export default {
     },
     deleteCourse(id) {
       this.getCourse(id);
+      // wait until getCourse finishes
+      setTimeout(() => {
+        if (this.course && this.course.enrolments.length) {
+          //If course has enrolments
+          this.$bvModal
+            .msgBoxConfirm(
+              "Please confirm that you want to delete the course. WARNING: the enrolments for this course will also be deleted!",
+              {
+                title: "Please Confirm",
+                okVariant: "danger",
+                okTitle: "DELETE",
+                headerBgVariant: "dark",
+                headerTextVariant: "light",
+                cancelTitle: "BACK",
+                footerClass: "p-2",
+                hideHeaderClose: false,
+                centered: true,
+              }
+            )
+            .then((value) => {
+              if (value === true) {
+                //DELETE
+                let token = localStorage.getItem("token");
 
-      if (this.course && this.course.enrolments.length) {
-        //If course has enrolments
-        this.$bvModal
-          .msgBoxConfirm(
-            "Please confirm that you want to delete the course. WARNING: the enrolments for this course will also be deleted!",
-            {
-              title: "Please Confirm",
-              okVariant: "danger",
-              okTitle: "DELETE",
-              headerBgVariant: "dark",
-              headerTextVariant: "light",
-              cancelTitle: "BACK",
-              footerClass: "p-2",
-              hideHeaderClose: false,
-              centered: true,
-            }
-          )
-          .then((value) => {
-            if (value === true) {
-              //DELETE
-              let token = localStorage.getItem("token");
+                let listOfDeleteRequests = this.course.enrolments.map(
+                  (current) =>
+                    axios.delete("/enrolments/" + current.id, {
+                      headers: { Authorization: "Bearer " + token },
+                    })
+                );
+                // log the contents of listOfDeleteRequests
+                Promise.all(listOfDeleteRequests).then(() => {
+                  axios
+                    .delete("/courses/" + id, {
+                      headers: { Authorization: "Bearer " + token },
+                    })
+                    .then(() => {
+                      // do something
+                      this.$emit("courseDeleted");
+                      this.getCourses();
+                    })
+                    .catch((error) => {
+                      console.log(error);
+                    });
+                });
 
-              // loop through enrolments and send delete request to delete them
-              this.course.enrolments.forEach((enrolment) => {
+                // axios
+                //   .delete(`/courses/${id}`, {
+                //     headers: { Authorization: "Bearer " + token },
+                //   })
+                //   .then(() => {
+                //     this.$emit("courseDeleted");
+                //     this.getCourses();
+                //   })
+                //   .catch((error) => {
+                //     console.log(error);
+                //     console.log(error.response.data);
+                //   });
+              }
+            })
+            .catch((err) => {
+              // An error occurred
+              console.log(err);
+            });
+        } else {
+          // Course has no enrolments
+          this.$bvModal
+            .msgBoxConfirm(
+              "Please confirm that you want to delete the course.",
+              {
+                title: "Please Confirm",
+                okVariant: "danger",
+                okTitle: "DELETE",
+                headerBgVariant: "dark",
+                headerTextVariant: "light",
+                cancelTitle: "BACK",
+                footerClass: "p-2",
+                hideHeaderClose: false,
+                centered: true,
+              }
+            )
+            .then((value) => {
+              if (value === true) {
+                //DELETE
+                let token = localStorage.getItem("token");
                 axios
-                  .delete("/enrolments/" + enrolment.id, {
+                  .delete(`/courses/${id}`, {
                     headers: { Authorization: "Bearer " + token },
                   })
-                  .catch(function (error) {
+                  .then(() => {
+                    this.$emit("courseDeleted");
+                    this.getCourses();
+                  })
+                  .catch((error) => {
                     console.log(error);
+                    console.log(error.response.data);
                   });
-              });
-
-              axios
-                .delete(`/courses/${id}`, {
-                  headers: { Authorization: "Bearer " + token },
-                })
-                .then(() => {
-                  this.$emit("courseDeleted");
-                  this.getCourses();
-                })
-                .catch((error) => {
-                  console.log(error);
-                  console.log(error.response.data);
-                });
-            }
-          })
-          .catch((err) => {
-            // An error occurred
-            console.log(err);
-          });
-      } else {
-        // Course has no enrolments
-        this.$bvModal
-          .msgBoxConfirm("Please confirm that you want to delete the course.", {
-            title: "Please Confirm",
-            okVariant: "danger",
-            okTitle: "DELETE",
-            headerBgVariant: "dark",
-            headerTextVariant: "light",
-            cancelTitle: "BACK",
-            footerClass: "p-2",
-            hideHeaderClose: false,
-            centered: true,
-          })
-          .then((value) => {
-            if (value === true) {
-              //DELETE
-              let token = localStorage.getItem("token");
-              axios
-                .delete(`/courses/${id}`, {
-                  headers: { Authorization: "Bearer " + token },
-                })
-                .then(() => {
-                  this.$emit("courseDeleted");
-                  this.getCourses();
-                })
-                .catch((error) => {
-                  console.log(error);
-                  console.log(error.response.data);
-                });
-            }
-          })
-          .catch((err) => {
-            // An error occurred
-            console.log(err);
-          });
-      }
+              }
+            })
+            .catch((err) => {
+              // An error occurred
+              console.log(err);
+            });
+        }
+      }, 500);
     },
   },
 };
