@@ -4,13 +4,13 @@
       <!-- Loading skeleton card -->
       <template #loading>
         <b-card class="py-2">
-          <b-skeleton width="40%"></b-skeleton>
-          <b-skeleton width="10%" class="my-2"></b-skeleton>
-          <b-skeleton width="100%"></b-skeleton>
-          <b-skeleton width="100%"></b-skeleton>
-          <b-skeleton width="100%"></b-skeleton>
-          <b-skeleton width="20%" class="my-4"></b-skeleton>
-          <b-skeleton width="10%"></b-skeleton>
+          <span class="d-flex">
+            <b-skeleton class="mr-2 mb-3" width="10%"></b-skeleton>
+            <b-skeleton width="10%"></b-skeleton>
+          </span>
+          <b-skeleton width="30%"></b-skeleton>
+          <b-skeleton class="my-3" width="50%"></b-skeleton>
+          <b-skeleton width="30%"></b-skeleton>
           <div class="d-flex mt-3">
             <b-skeleton width="10%" type="button"></b-skeleton>
             <b-skeleton width="10%" type="button" class="mx-2"></b-skeleton>
@@ -39,7 +39,7 @@
                 params: { id: enrolment.lecturer_id },
               }"
             >
-              {{ enrolment.lecturer.name }}
+              {{ lecturer.name }}
             </router-link>
           </span>
           <span class="d-flex align-items-baseline my-3">
@@ -50,7 +50,7 @@
                 params: { id: enrolment.course_id },
               }"
             >
-              {{ enrolment.course.title }}
+              {{ course.title }}
             </router-link>
           </span>
           <span class="d-flex align-items-baseline">
@@ -96,8 +96,10 @@ export default {
   name: "EnrolmentShow",
   data() {
     return {
-      loading: true,
       enrolment: [],
+      course: [],
+      lecturer: [],
+      loading: true,
     };
   },
   mounted() {
@@ -113,8 +115,10 @@ export default {
           headers: { Authorization: "Bearer " + token },
         })
         .then((response) => {
+          console.log(response.data.data);
           this.enrolment = response.data.data;
-          console.log(this.enrolment);
+          this.lecturer = response.data.data.lecturer;
+          this.course = response.data.data.course;
           this.loading = false;
         })
         .catch((error) => {
