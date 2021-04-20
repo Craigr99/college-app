@@ -1,6 +1,9 @@
-# college-app
+# craig-college-app
 
 ## Project setup
+```
+git clone https://github.com/Craigr99/college-app.git
+```
 ```
 npm install
 ```
@@ -10,15 +13,11 @@ npm install
 npm run serve
 ```
 
-### Compiles and minifies for production
+### Default Email and Password to login
 ```
-npm run build
+Email: sam@bloggs.com
 ```
-
-### Lints and fixes files
 ```
-npm run lint
+Password: secret
 ```
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
